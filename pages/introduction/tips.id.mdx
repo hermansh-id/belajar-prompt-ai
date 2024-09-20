@@ -1,0 +1,117 @@
+
+# Tips Umum untuk Merancang Prompt
+
+import {Bleed} from 'nextra-theme-docs'
+
+<iframe width="100%"
+  height="415px"
+  src="https://www.youtube.com/embed/7M6CSCIMJ3k?si=BgaVt9g1vS4BQzXZ" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+  />
+
+Berikut adalah beberapa tips yang perlu diingat saat Anda merancang prompt:
+
+### Mulai dari yang Sederhana
+Ketika Anda mulai merancang prompt, ingatlah bahwa ini adalah proses yang berulang dan membutuhkan banyak percobaan untuk mendapatkan hasil yang optimal. Menggunakan playground sederhana dari OpenAI atau Cohere adalah titik awal yang baik.
+
+Anda bisa mulai dengan prompt sederhana dan terus menambahkan elemen dan konteks untuk mendapatkan hasil yang lebih baik. Penting untuk terus memperbaiki prompt Anda selama proses ini. Dalam panduan ini, Anda akan melihat banyak contoh di mana kekhususan, kesederhanaan, dan keringkasan sering memberikan hasil yang lebih baik.
+
+Jika Anda memiliki tugas besar yang melibatkan banyak sub-tugas, cobalah memecah tugas tersebut menjadi sub-tugas yang lebih sederhana dan terus membangunnya saat Anda mendapatkan hasil yang lebih baik. Ini menghindari penambahan kompleksitas yang berlebihan pada proses perancangan prompt di awal.
+
+### Instruksi
+Anda dapat merancang prompt yang efektif untuk berbagai tugas sederhana dengan menggunakan perintah untuk menginstruksikan model tentang apa yang ingin Anda capai, seperti "Tulis", "Klasifikasikan", "Ringkas", "Terjemahkan", "Urutkan", dan sebagainya.
+
+Ingatlah bahwa Anda juga perlu bereksperimen banyak untuk melihat apa yang paling efektif. Cobalah instruksi yang berbeda dengan kata kunci, konteks, dan data yang berbeda, dan lihat apa yang paling cocok untuk kasus penggunaan dan tugas Anda. Biasanya, semakin spesifik dan relevan konteksnya dengan tugas yang ingin Anda lakukan, semakin baik hasilnya. Kami akan membahas pentingnya sampling dan menambahkan lebih banyak konteks dalam panduan mendatang.
+
+Beberapa orang menyarankan untuk menempatkan instruksi di awal prompt. Saran lain adalah menggunakan pemisah yang jelas seperti "###" untuk memisahkan instruksi dan konteks.
+
+Contohnya:
+
+*Prompt:*
+```
+### Instruksi ###
+Terjemahkan teks di bawah ini ke bahasa Spanyol:
+
+Teks: "hello!"
+```
+
+*Output:*
+```
+¡Hola!
+```
+
+### Spesifisitas
+Jelaskan dengan sangat spesifik tentang instruksi dan tugas yang ingin Anda agar model lakukan. Semakin deskriptif dan detail promptnya, semakin baik hasilnya. Ini sangat penting ketika Anda memiliki hasil atau gaya generasi yang diinginkan. Tidak ada token atau kata kunci khusus yang menghasilkan hasil lebih baik. Yang lebih penting adalah memiliki format yang baik dan prompt yang deskriptif. Bahkan, memberikan contoh dalam prompt sangat efektif untuk mendapatkan output yang diinginkan dalam format tertentu.
+
+Saat merancang prompt, Anda juga harus mempertimbangkan panjang prompt karena ada batasan mengenai seberapa panjang prompt bisa. Pikirkan seberapa spesifik dan detail yang seharusnya Anda berikan. Memasukkan terlalu banyak detail yang tidak perlu bukanlah pendekatan yang baik. Detail harus relevan dan berkontribusi pada tugas yang sedang dikerjakan. Ini adalah sesuatu yang perlu Anda coba banyak. Kami mendorong banyak eksperimen dan iterasi untuk mengoptimalkan prompt untuk aplikasi Anda.
+
+Sebagai contoh, mari kita coba prompt sederhana untuk mengekstrak informasi spesifik dari sebuah teks.
+
+*Prompt:*
+```
+Ekstrak nama tempat dari teks berikut.
+
+Format yang diinginkan:
+Tempat: <daftar_tempat_dipisahkan_koma>
+
+Input: "Meskipun perkembangan ini menggembirakan bagi para peneliti, banyak hal masih menjadi misteri. "Kita sering memiliki kotak hitam antara otak dan efek yang kita lihat di periferi," kata Henrique Veiga-Fernandes, seorang neuroimunolog di Pusat Champalimaud untuk yang Tidak Diketahui di Lisbon. "Jika kita ingin menggunakannya dalam konteks terapeutik, kita sebenarnya perlu memahami mekanismenya.""
+```
+
+*Output:*
+```
+Tempat: Pusat Champalimaud untuk yang Tidak Diketahui, Lisbon
+```
+
+Teks input diambil dari [artikel Nature ini](https://www.nature.com/articles/d41586-023-00509-z).
+
+### Hindari Ketidakjelasan
+
+Mengingat tips di atas tentang menjadi detail dan meningkatkan format, mudah untuk terjebak dalam keinginan untuk terlalu pintar tentang prompt dan berpotensi menciptakan deskripsi yang tidak jelas. Seringkali lebih baik untuk spesifik dan langsung. Analoginya sangat mirip dengan komunikasi yang efektif -- semakin langsung, semakin efektif pesan tersampaikan.
+
+Misalnya, Anda mungkin tertarik untuk mempelajari konsep prompt engineering. Anda mungkin mencoba sesuatu seperti:
+
+```
+Jelaskan konsep prompt engineering. Buat penjelasannya singkat, hanya beberapa kalimat, dan jangan terlalu deskriptif.
+```
+
+Tidak jelas dari prompt di atas berapa banyak kalimat yang harus digunakan dan gaya apa yang diinginkan. Anda mungkin masih mendapatkan respons yang cukup baik dengan prompt di atas, tetapi prompt yang lebih baik adalah yang sangat spesifik, ringkas, dan langsung ke intinya. Sesuatu seperti:
+
+```
+Gunakan 2-3 kalimat untuk menjelaskan konsep prompt engineering kepada seorang siswa SMA.
+```
+
+### Lakukan atau Jangan Lakukan?
+Tips umum lainnya saat merancang prompt adalah menghindari mengatakan apa yang tidak boleh dilakukan, tetapi katakan apa yang harus dilakukan sebagai gantinya. Ini mendorong lebih banyak kekhususan dan fokus pada detail yang menghasilkan respons yang baik dari model.
+
+Berikut adalah contoh chatbot rekomendasi film yang gagal melakukan persis apa yang tidak saya inginkan karena cara saya menulis instruksinya -- fokus pada apa yang tidak boleh dilakukan.
+
+*Prompt:*
+```
+Berikut adalah agen yang merekomendasikan film kepada pelanggan. JANGAN TANYAKAN MINAT. JANGAN TANYAKAN INFORMASI PRIBADI.
+
+Pelanggan: Tolong rekomendasikan film berdasarkan minat saya.
+Agen: 
+```
+
+*Output:*
+```
+Tentu, saya bisa merekomendasikan film berdasarkan minat Anda. Film jenis apa yang ingin Anda tonton? Apakah Anda lebih suka aksi, komedi, romansa, atau yang lain?
+```
+
+Berikut adalah prompt yang lebih baik:
+
+*Prompt:*
+```
+Berikut adalah agen yang merekomendasikan film kepada pelanggan. Agen bertanggung jawab untuk merekomendasikan film dari daftar film tren global teratas. Agen harus menahan diri untuk tidak menanyakan preferensi pengguna dan menghindari meminta informasi pribadi. Jika agen tidak memiliki film untuk direkomendasikan, agen harus menjawab "Maaf, tidak dapat menemukan film untuk direkomendasikan hari ini.".
+
+Pelanggan: Tolong rekomendasikan film berdasarkan minat saya.
+Agen:
+```
+
+*Output:*
+```
+Maaf, saya tidak memiliki informasi tentang minat Anda. Namun, berikut adalah daftar film tren global teratas saat ini: [daftar film]. Saya harap Anda menemukan sesuatu yang Anda sukai!
+```
+
+Beberapa contoh di atas diadaptasi dari ["Praktik terbaik untuk prompt engineering dengan OpenAI API"](https://help.openai.com/en/articles/6654000-best-practices-for-prompt-engineering-with-openai-api).
+

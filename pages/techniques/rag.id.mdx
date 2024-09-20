@@ -1,0 +1,50 @@
+
+# Generasi Augmentasi Retrieval (RAG)
+
+import {Cards, Card} from 'nextra-theme-docs'
+import {TerminalIcon} from 'components/icons'
+import {CodeIcon} from 'components/icons'
+import {Screenshot} from 'components/screenshot'
+import RAG from '../../img/rag.png'
+import { Callout } from 'nextra/components'
+
+Model bahasa untuk tujuan umum dapat dilatih khusus untuk menyelesaikan beberapa tugas umum seperti analisis sentimen dan pengenalan entitas bernama. Tugas-tugas ini umumnya tidak memerlukan pengetahuan latar belakang tambahan.
+
+Untuk tugas yang lebih kompleks dan membutuhkan pengetahuan intensif, kita bisa membangun sistem berbasis model bahasa yang mengakses sumber pengetahuan eksternal untuk menyelesaikan tugas. Hal ini memungkinkan konsistensi faktual yang lebih baik, meningkatkan keandalan respons yang dihasilkan, dan membantu mengurangi masalah "halusinasi" (ketika model menghasilkan informasi yang tidak akurat).
+
+Peneliti Meta AI memperkenalkan metode yang disebut [Generasi Augmentasi Retrieval (RAG)](https://ai.facebook.com/blog/retrieval-augmented-generation-streamlining-the-creation-of-intelligent-natural-language-processing-models/) untuk mengatasi tugas-tugas yang membutuhkan pengetahuan intensif seperti itu. RAG menggabungkan komponen pencarian informasi dengan model generator teks. RAG dapat dilatih khusus dan pengetahuan internalnya dapat dimodifikasi secara efisien tanpa perlu melatih ulang seluruh model.
+
+RAG mengambil input dan mengambil serangkaian dokumen yang relevan/mendukung dari sumber tertentu (misalnya, Wikipedia). Dokumen-dokumen tersebut digabungkan sebagai konteks dengan prompt input asli dan dimasukkan ke generator teks yang menghasilkan output akhir. Ini membuat RAG adaptif untuk situasi di mana fakta dapat berubah seiring waktu. Ini sangat berguna karena pengetahuan parametrik LLM (Large Language Model) bersifat statis. RAG memungkinkan model bahasa untuk melewati pelatihan ulang, memungkinkan akses ke informasi terbaru untuk menghasilkan output yang andal melalui generasi berbasis pencarian.
+
+Lewis dkk., (2021) mengusulkan resep pelatihan khusus untuk RAG yang bersifat umum. Model seq2seq yang telah dilatih sebelumnya digunakan sebagai memori parametrik dan indeks vektor padat dari Wikipedia digunakan sebagai memori non-parametrik (diakses menggunakan pencari neural yang telah dilatih sebelumnya). Berikut adalah gambaran umum cara kerja pendekatan ini:
+
+<Screenshot src={RAG} alt="RAG" />
+Sumber Gambar: [Lewis et el. (2021)](https://arxiv.org/pdf/2005.11401.pdf) 
+
+RAG menunjukkan kinerja yang kuat pada beberapa tolok ukur seperti [Natural Questions](https://ai.google.com/research/NaturalQuestions), [WebQuestions](https://paperswithcode.com/dataset/webquestions), dan CuratedTrec. RAG menghasilkan respons yang lebih faktual, spesifik, dan beragam ketika diuji pada pertanyaan MS-MARCO dan Jeopardy. RAG juga meningkatkan hasil pada verifikasi fakta FEVER.
+
+Ini menunjukkan potensi RAG sebagai pilihan yang layak untuk meningkatkan output model bahasa dalam tugas-tugas yang membutuhkan pengetahuan intensif.
+
+Baru-baru ini, pendekatan berbasis pencarian ini menjadi lebih populer dan dikombinasikan dengan LLM populer seperti ChatGPT untuk meningkatkan kemampuan dan konsistensi faktual.
+
+## Kasus Penggunaan RAG: Menghasilkan Judul Makalah ML yang Ramah
+
+Di bawah ini, kami telah menyiapkan tutorial notebook yang menunjukkan penggunaan LLM open-source untuk membangun sistem RAG untuk menghasilkan judul makalah pembelajaran mesin yang singkat dan ringkas:
+
+<Cards>
+    <Card
+    icon={<CodeIcon />}
+    title="Memulai dengan RAG"
+    href="https://github.com/dair-ai/Prompt-Engineering-Guide/blob/main/notebooks/pe-rag.ipynb"
+    />
+</Cards>
+
+<Callout type= "info" emoji="🎓">
+  Ingin belajar lebih banyak tentang RAG? Lihat [kursus berbasis kohort baru kami](https://maven.com/dair-ai/prompt-engineering-llms?cohortSlug=). Gunakan kode promo MAVENAI20 untuk diskon 20%.
+</Callout>
+
+## Referensi
+
+- [Generasi Augmentasi Retrieval untuk Model Bahasa Besar: Sebuah Survei](https://arxiv.org/abs/2312.10997) (Des 2023)
+- [Generasi Augmentasi Retrieval: Menyederhanakan pembuatan model pemrosesan bahasa alami yang cerdas](https://ai.meta.com/blog/retrieval-augmented-generation-streamlining-the-creation-of-intelligent-natural-language-processing-models/) (Sep 2020)
+

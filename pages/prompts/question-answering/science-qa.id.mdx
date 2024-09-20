@@ -1,0 +1,79 @@
+
+# Menjawab Pertanyaan Ilmiah dengan LLM
+
+import { Tabs, Tab } from 'nextra/components'
+import {Callout} from 'nextra/components'
+
+## Latar Belakang
+Prompt berikut ini menguji kemampuan LLM (Large Language Model atau Model Bahasa Besar) dalam menjawab pertanyaan ilmiah.
+
+## Prompt
+
+```markdown
+Jawablah pertanyaan berdasarkan konteks di bawah ini. Berikan jawaban singkat dan jelas. Jika tidak yakin dengan jawabannya, responlah dengan "Tidak yakin dengan jawaban".
+
+Konteks: Teplizumab berawal dari perusahaan obat di New Jersey bernama Ortho Pharmaceutical. Di sana, para ilmuwan mengembangkan versi awal antibodi yang diberi nama OKT3. Awalnya berasal dari tikus, molekul ini mampu menempel pada permukaan sel T dan membatasi potensi sel tersebut untuk membunuh sel lain. Pada tahun 1986, OKT3 disetujui untuk membantu mencegah penolakan organ setelah transplantasi ginjal, menjadikannya antibodi terapeutik pertama yang diizinkan untuk penggunaan pada manusia.
+
+Pertanyaan: Dari mana OKT3 awalnya berasal?
+Jawaban:
+```
+
+## Kode / API
+
+<Tabs items={['GPT-4 (OpenAI)', 'Mixtral MoE 8x7B Instruct (Fireworks)']}>
+    <Tab>
+  
+    ```python
+    from openai import OpenAI
+    client = OpenAI()
+
+    response = client.chat.completions.create(
+    model="gpt-4",
+    messages=[
+        {
+        "role": "user",
+        "content": "Jawablah pertanyaan berdasarkan konteks di bawah ini. Berikan jawaban singkat dan jelas. Jika tidak yakin dengan jawabannya, responlah dengan \"Tidak yakin dengan jawaban\".\n\nKonteks: Teplizumab berawal dari perusahaan obat di New Jersey bernama Ortho Pharmaceutical. Di sana, para ilmuwan mengembangkan versi awal antibodi yang diberi nama OKT3. Awalnya berasal dari tikus, molekul ini mampu menempel pada permukaan sel T dan membatasi potensi sel tersebut untuk membunuh sel lain. Pada tahun 1986, OKT3 disetujui untuk membantu mencegah penolakan organ setelah transplantasi ginjal, menjadikannya antibodi terapeutik pertama yang diizinkan untuk penggunaan pada manusia.\n\nPertanyaan: Dari mana OKT3 awalnya berasal?\nJawaban:"
+        }
+    ],
+    temperature=1,
+    max_tokens=250,
+    top_p=1,
+    frequency_penalty=0,
+    presence_penalty=0
+    )
+    ```
+    </Tab>
+
+    <Tab>
+        ```python
+        import fireworks.client
+        fireworks.client.api_key = "<FIREWORKS_API_KEY>"
+        completion = fireworks.client.ChatCompletion.create(
+            model="accounts/fireworks/models/mixtral-8x7b-instruct",
+            messages=[
+                {
+                "role": "user",
+                "content": "Jawablah pertanyaan berdasarkan konteks di bawah ini. Berikan jawaban singkat dan jelas. Jika tidak yakin dengan jawabannya, responlah dengan \"Tidak yakin dengan jawaban\".\n\nKonteks: Teplizumab berawal dari perusahaan obat di New Jersey bernama Ortho Pharmaceutical. Di sana, para ilmuwan mengembangkan versi awal antibodi yang diberi nama OKT3. Awalnya berasal dari tikus, molekul ini mampu menempel pada permukaan sel T dan membatasi potensi sel tersebut untuk membunuh sel lain. Pada tahun 1986, OKT3 disetujui untuk membantu mencegah penolakan organ setelah transplantasi ginjal, menjadikannya antibodi terapeutik pertama yang diizinkan untuk penggunaan pada manusia.\n\nPertanyaan: Dari mana OKT3 awalnya berasal?\nJawaban:",
+                }
+            ],
+            stop=["<|im_start|>","<|im_end|>","<|endoftext|>"],
+            stream=True,
+            n=1,
+            top_p=1,
+            top_k=40,
+            presence_penalty=0,
+            frequency_penalty=0,
+            prompt_truncate_len=1024,
+            context_length_exceeded_behavior="truncate",
+            temperature=0.9,
+            max_tokens=4000
+        )
+        ```
+    </Tab>
+
+
+</Tabs>
+
+## Referensi
+- [Panduan Rekayasa Prompt](https://www.promptingguide.ai/introduction/examples#question-answering) (16 Maret 2023)
+

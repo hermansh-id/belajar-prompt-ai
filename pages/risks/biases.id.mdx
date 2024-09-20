@@ -1,0 +1,102 @@
+
+# Bias
+
+Model Bahasa Besar (LLM) dapat menghasilkan output yang bermasalah dan berpotensi berbahaya, serta menunjukkan bias yang dapat menurunkan kinerja model dalam tugas-tugas selanjutnya. Beberapa masalah ini dapat dikurangi melalui strategi prompting yang efektif, namun mungkin memerlukan solusi lebih lanjut seperti moderasi dan penyaringan.
+
+### Distribusi Contoh
+
+Ketika melakukan pembelajaran dengan sedikit contoh (few-shot learning), apakah distribusi contoh mempengaruhi kinerja model atau membuatnya bias? Mari kita lakukan pengujian sederhana.
+
+*Prompt:*
+```
+T: Saya baru saja mendapat berita terbaik!
+J: Positif
+
+T: Kami baru saja mendapat kenaikan gaji di tempat kerja!
+J: Positif
+
+T: Saya sangat bangga dengan apa yang saya capai hari ini.
+J: Positif
+
+T: Saya sedang mengalami hari terbaik!
+J: Positif
+
+T: Saya sangat menantikan akhir pekan.
+J: Positif
+
+T: Saya baru saja mendapat hadiah terbaik!
+J: Positif
+
+T: Saya sangat bahagia saat ini.
+J: Positif
+
+T: Saya sangat bersyukur memiliki keluarga yang luar biasa.
+J: Positif
+
+T: Cuaca di luar sangat suram.
+J: Negatif
+
+T: Saya baru saja mendapat berita buruk.
+J: Negatif
+
+T: Itu meninggalkan rasa yang tidak enak.
+J:
+```
+
+*Output:*
+```
+Negatif
+```
+
+Dalam contoh di atas, tampaknya distribusi contoh tidak membuat model menjadi bias. Ini adalah hal yang baik. Mari kita coba contoh lain dengan teks yang lebih sulit untuk diklasifikasikan:
+
+*Prompt:*
+```
+T: Makanan di sini lezat!
+J: Positif
+
+T: Saya sangat lelah dengan tugas kuliah ini.
+J: Negatif
+
+T: Saya tidak percaya saya gagal dalam ujian.
+J: Negatif
+
+T: Saya mengalami hari yang menyenangkan hari ini!
+J: Positif
+
+T: Saya benci pekerjaan ini.
+J: Negatif
+
+T: Pelayanan di sini sangat buruk.
+J: Negatif
+
+T: Saya sangat frustrasi dengan hidup saya.
+J: Negatif
+
+T: Saya tidak pernah mendapat istirahat.
+J: Negatif
+
+T: Makanan ini rasanya tidak enak.
+J: Negatif
+
+T: Saya tidak tahan dengan bos saya.
+J: Negatif
+
+T: Saya merasakan sesuatu.
+J:
+```
+
+*Output:*
+```
+Negatif
+```
+
+Meskipun kalimat terakhir agak subjektif, saya mencoba mengubah distribusi dengan menggunakan 8 contoh positif dan 2 contoh negatif, lalu menguji kalimat yang sama. Hasilnya? Model menjawab "Positif". Model mungkin memiliki banyak pengetahuan tentang klasifikasi sentimen, sehingga sulit untuk membuatnya menunjukkan bias dalam masalah ini.
+
+Saran yang dapat diberikan adalah hindari membuat distribusi yang tidak seimbang dan berikan jumlah contoh yang seimbang untuk setiap label. Untuk tugas-tugas yang lebih sulit di mana model tidak memiliki banyak pengetahuan, kemungkinan model akan lebih kesulitan.
+
+### Urutan Contoh
+
+Ketika melakukan pembelajaran dengan sedikit contoh, apakah urutan mempengaruhi kinerja model atau membuatnya bias?
+
+Anda dapat mencoba contoh-contoh di atas dan melihat apakah Anda dapat membuat model menjadi bias terhadap suatu label dengan mengubah urutannya. Sarannya adalah untuk mengacak urutan contoh. Misalnya, hindari menempatkan semua contoh positif di awal dan contoh negatif di akhir. Masalah ini akan semakin parah jika distribusi label tidak seimbang. Selalu pastikan untuk bereksperimen banyak untuk mengurangi jenis bias ini.

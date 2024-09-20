@@ -1,0 +1,75 @@
+
+# Menjelaskan Konsep dengan LLM (Model Bahasa Besar)
+
+import { Tabs, Tab } from 'nextra/components'
+import {Callout} from 'nextra/components'
+
+## Latar Belakang
+Prompt berikut ini menguji kemampuan LLM untuk menjelaskan atau meringkas konsep.
+
+## Prompt
+```markdown
+Antibiotik adalah jenis obat yang digunakan untuk mengobati infeksi bakteri. Cara kerjanya adalah dengan membunuh bakteri atau mencegah perkembangbiakannya, sehingga sistem kekebalan tubuh dapat melawan infeksi. Antibiotik biasanya diminum dalam bentuk pil, kapsul, atau larutan cair, atau kadang-kadang diberikan melalui infus. Antibiotik tidak efektif melawan infeksi virus, dan penggunaan yang tidak tepat dapat menyebabkan resistensi antibiotik.
+
+Jelaskan paragraf di atas dalam satu kalimat:
+```
+
+## Kode / API
+
+<Tabs items={['GPT-4 (OpenAI)', 'Mixtral MoE 8x7B Instruct (Fireworks)']}>
+    <Tab>
+  
+    ```python
+    from openai import OpenAI
+    client = OpenAI()
+
+    response = client.chat.completions.create(
+    model="gpt-4",
+    messages=[
+        {
+        "role": "user",
+        "content": "Antibiotik adalah jenis obat yang digunakan untuk mengobati infeksi bakteri. Cara kerjanya adalah dengan membunuh bakteri atau mencegah perkembangbiakannya, sehingga sistem kekebalan tubuh dapat melawan infeksi. Antibiotik biasanya diminum dalam bentuk pil, kapsul, atau larutan cair, atau kadang-kadang diberikan melalui infus. Antibiotik tidak efektif melawan infeksi virus, dan penggunaan yang tidak tepat dapat menyebabkan resistensi antibiotik.\n\nJelaskan paragraf di atas dalam satu kalimat:"
+        }
+    ],
+    temperature=1,
+    max_tokens=250,
+    top_p=1,
+    frequency_penalty=0,
+    presence_penalty=0
+    )
+    ```
+    </Tab>
+
+    <Tab>
+        ```python
+        import fireworks.client
+        fireworks.client.api_key = "<KUNCI_API_FIREWORKS>"
+        completion = fireworks.client.ChatCompletion.create(
+            model="accounts/fireworks/models/mixtral-8x7b-instruct",
+            messages=[
+                {
+                "role": "user",
+                "content": "Antibiotik adalah jenis obat yang digunakan untuk mengobati infeksi bakteri. Cara kerjanya adalah dengan membunuh bakteri atau mencegah perkembangbiakannya, sehingga sistem kekebalan tubuh dapat melawan infeksi. Antibiotik biasanya diminum dalam bentuk pil, kapsul, atau larutan cair, atau kadang-kadang diberikan melalui infus. Antibiotik tidak efektif melawan infeksi virus, dan penggunaan yang tidak tepat dapat menyebabkan resistensi antibiotik.\n\nJelaskan paragraf di atas dalam satu kalimat:",
+                }
+            ],
+            stop=["<|im_start|>","<|im_end|>","<|endoftext|>"],
+            stream=True,
+            n=1,
+            top_p=1,
+            top_k=40,
+            presence_penalty=0,
+            frequency_penalty=0,
+            prompt_truncate_len=1024,
+            context_length_exceeded_behavior="truncate",
+            temperature=0.9,
+            max_tokens=4000
+        )
+        ```
+    </Tab>
+
+
+</Tabs>
+
+## Referensi
+- [Panduan Rekayasa Prompt](https://www.promptingguide.ai/introduction/examples#text-summarization) (16 Maret 2023)
+

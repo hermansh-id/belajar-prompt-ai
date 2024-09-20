@@ -1,0 +1,126 @@
+
+# Prompting dengan Beberapa Contoh (Few-Shot Prompting)
+
+import { Callout } from 'nextra/components'
+
+<iframe width="100%"
+  height="415px"
+  src="https://www.youtube.com/embed/ojtbHUqw1LA?si=DPHurHTzZXm22vcN" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+  />
+
+Meskipun model bahasa besar (Large Language Models atau LLMs) menunjukkan kemampuan luar biasa dalam menyelesaikan tugas tanpa contoh (zero-shot), mereka masih kurang efektif untuk tugas-tugas yang lebih kompleks. Teknik prompting dengan beberapa contoh (few-shot prompting) dapat digunakan untuk membantu model belajar dari konteks, di mana kita memberikan beberapa contoh dalam prompt untuk mengarahkan model agar berkinerja lebih baik.
+
+Menurut [Touvron dkk. 2023](https://arxiv.org/pdf/2302.13971.pdf), kemampuan few-shot pertama kali muncul ketika model mencapai ukuran yang cukup besar [(Kaplan dkk., 2020)](https://arxiv.org/abs/2001.08361).
+
+Mari kita lihat contoh few-shot prompting yang diperkenalkan oleh [Brown dkk. 2020](https://arxiv.org/abs/2005.14165). Dalam contoh ini, tugasnya adalah menggunakan kata baru dengan benar dalam sebuah kalimat.
+
+*Prompt:*
+```markdown
+"Whatpu" adalah hewan kecil berbulu yang berasal dari Tanzania. Contoh kalimat yang menggunakan kata whatpu adalah:
+Kami sedang berwisata di Afrika dan melihat whatpu-whatpu yang sangat lucu.
+
+"Farduddle" artinya melompat-lompat dengan sangat cepat. Contoh kalimat yang menggunakan kata farduddle adalah:
+```
+
+*Output:*
+```
+Ketika kami memenangkan pertandingan, kami semua mulai farduddle untuk merayakannya.
+```
+
+Kita bisa melihat bahwa model telah belajar melakukan tugas tersebut hanya dengan satu contoh (1-shot). Untuk tugas yang lebih sulit, kita bisa mencoba menambah jumlah contoh (misalnya 3-shot, 5-shot, 10-shot, dan seterusnya).
+
+Berdasarkan temuan [Min dkk. (2022)](https://arxiv.org/abs/2202.12837), berikut beberapa tips tentang penggunaan contoh dalam few-shot prompting:
+
+- Ruang label dan distribusi teks input yang ditentukan oleh contoh-contoh sangat penting (terlepas dari apakah label-label tersebut benar untuk setiap input).
+- Format yang digunakan juga berperan penting dalam kinerja model. Bahkan jika Anda menggunakan label acak, hasilnya masih lebih baik daripada tidak menggunakan label sama sekali.
+- Hasil tambahan menunjukkan bahwa memilih label acak dari distribusi label yang sebenarnya (bukan distribusi seragam) juga membantu.
+
+Mari kita coba beberapa contoh. Pertama, kita akan mencoba contoh dengan label acak (artinya label Negatif dan Positif diberikan secara acak pada input):
+
+*Prompt:*
+```
+Ini luar biasa! // Negatif
+Ini buruk! // Positif
+Wah, film itu keren! // Positif
+Acara yang mengerikan! //
+```
+
+*Output:*
+```
+Negatif
+```
+
+Kita masih mendapatkan jawaban yang benar, meskipun label-labelnya diacak. Perhatikan bahwa kita juga mempertahankan formatnya, yang juga membantu. Bahkan, dengan percobaan lebih lanjut, tampaknya model-model GPT terbaru yang kita uji menjadi lebih tahan terhadap format acak. Contoh:
+
+*Prompt:*
+```
+Positif Ini luar biasa! 
+Ini buruk! Negatif
+Wah, film itu keren!
+Positif
+Acara yang mengerikan! --
+```
+
+*Output:*
+```
+Negatif
+```
+
+Tidak ada konsistensi format di atas, tetapi model masih memprediksi label yang benar. Kita perlu melakukan analisis lebih mendalam untuk memastikan apakah hal ini berlaku untuk tugas-tugas yang berbeda dan lebih kompleks, termasuk variasi prompt yang berbeda.
+
+### Keterbatasan Few-shot Prompting
+
+Few-shot prompting bekerja dengan baik untuk banyak tugas, tetapi masih belum sempurna, terutama ketika berhadapan dengan tugas-tugas yang memerlukan penalaran lebih kompleks. Mari kita lihat contoh berikut:
+
+```
+Angka-angka ganjil dalam kelompok ini berjumlah genap: 15, 32, 5, 13, 82, 7, 1. 
+
+J: 
+```
+
+Jika kita mencobanya lagi, model akan menghasilkan output berikut:
+
+```
+Ya, angka-angka ganjil dalam kelompok ini berjumlah 107, yang merupakan angka genap.
+```
+
+Ini bukan respons yang benar, yang menunjukkan keterbatasan sistem ini dan kebutuhan akan teknik prompt engineering yang lebih canggih.
+
+Mari kita coba menambahkan beberapa contoh untuk melihat apakah few-shot prompting dapat meningkatkan hasilnya.
+
+*Prompt:*
+```
+Angka-angka ganjil dalam kelompok ini berjumlah genap: 4, 8, 9, 15, 12, 2, 1.
+J: Jawabannya adalah Salah.
+
+Angka-angka ganjil dalam kelompok ini berjumlah genap: 17, 10, 19, 4, 8, 12, 24.
+J: Jawabannya adalah Benar.
+
+Angka-angka ganjil dalam kelompok ini berjumlah genap: 16, 11, 14, 4, 8, 13, 24.
+J: Jawabannya adalah Benar.
+
+Angka-angka ganjil dalam kelompok ini berjumlah genap: 17, 9, 10, 12, 13, 4, 2.
+J: Jawabannya adalah Salah.
+
+Angka-angka ganjil dalam kelompok ini berjumlah genap: 15, 32, 5, 13, 82, 7, 1. 
+J: 
+```
+
+*Output:*
+```
+Jawabannya adalah Benar.
+```
+
+Ternyata itu tidak berhasil. Tampaknya few-shot prompting tidak cukup untuk mendapatkan respons yang dapat diandalkan untuk jenis masalah penalaran ini. Contoh di atas memberikan informasi dasar tentang tugas tersebut. Jika Anda perhatikan lebih dekat, jenis tugas yang kita perkenalkan melibatkan beberapa langkah penalaran tambahan. Dengan kata lain, mungkin akan membantu jika kita memecah masalah menjadi beberapa langkah dan mendemonstrasikannya kepada model. Baru-baru ini, [prompting dengan rantai pemikiran (chain-of-thought atau CoT)](https://arxiv.org/abs/2201.11903) telah populer untuk mengatasi tugas-tugas aritmetika, penalaran umum, dan penalaran simbolis yang lebih kompleks.
+
+Secara keseluruhan, tampaknya memberikan contoh berguna untuk menyelesaikan beberapa tugas. Ketika prompting tanpa contoh (zero-shot) dan prompting dengan beberapa contoh (few-shot) tidak cukup, itu mungkin berarti bahwa apa pun yang dipelajari oleh model tidak cukup untuk menyelesaikan tugas dengan baik. Dari sini, disarankan untuk mulai memikirkan tentang fine-tuning model Anda atau bereksperimen dengan teknik prompting yang lebih canggih. Selanjutnya, kita akan membahas salah satu teknik prompting populer yang disebut prompting dengan rantai pemikiran (chain-of-thought prompting) yang telah mendapatkan banyak popularitas.
+
+<Callout type= "info" emoji="🎉">
+Kami dengan gembira meluncurkan dua kursus baru tentang prompt engineering. Dapatkan akses dengan bergabung di DAIR.AI Academy kami. [Bergabung sekarang!](https://dair-ai.thinkific.com/)
+
+Gunakan kode PROMPTING20 untuk mendapatkan diskon tambahan 20%.
+
+PENTING: Diskon terbatas untuk 500 siswa pertama.
+
+</Callout>

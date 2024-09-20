@@ -1,0 +1,80 @@
+
+# Menjawab Pertanyaan Terbuka dengan LLM
+
+import { Tabs, Tab } from 'nextra/components'
+import {Callout} from 'nextra/components'
+
+## Latar Belakang
+Prompt berikut ini menguji kemampuan LLM (Model Bahasa Besar) untuk menjawab pertanyaan terbuka, yang melibatkan menjawab pertanyaan faktual tanpa bukti yang disediakan.
+
+<Callout type="warning" emoji="⚠️">
+    Perlu diingat bahwa karena sifat tugas yang menantang ini, LLM mungkin akan menghasilkan jawaban yang tidak akurat (halusinasi) ketika mereka tidak memiliki pengetahuan tentang pertanyaan tersebut.
+</Callout>
+
+## Prompt
+```markdown
+Dalam percakapan antara manusia dan AI ini, AI bersikap membantu dan ramah. Jika AI tidak tahu jawabannya, ia akan mengatakan "Saya tidak tahu".
+
+AI: Halo, ada yang bisa saya bantu?
+Manusia: Apakah saya bisa mendapatkan McDonalds di bandara SeaTac?
+```
+
+## Kode / API
+
+<Tabs items={['GPT-4 (OpenAI)', 'Mixtral MoE 8x7B Instruct (Fireworks)']}>
+    <Tab>
+  
+    ```python
+    from openai import OpenAI
+    client = OpenAI()
+
+    response = client.chat.completions.create(
+    model="gpt-4",
+    messages=[
+        {
+        "role": "user",
+        "content": "Dalam percakapan antara manusia dan AI ini, AI bersikap membantu dan ramah. Jika AI tidak tahu jawabannya, ia akan mengatakan \"Saya tidak tahu\".\n\nAI: Halo, ada yang bisa saya bantu?\nManusia: Apakah saya bisa mendapatkan McDonalds di bandara SeaTac?"
+        }
+    ],
+    temperature=1,
+    max_tokens=250,
+    top_p=1,
+    frequency_penalty=0,
+    presence_penalty=0
+    )
+    ```
+    </Tab>
+
+    <Tab>
+        ```python
+        import fireworks.client
+        fireworks.client.api_key = "<FIREWORKS_API_KEY>"
+        completion = fireworks.client.ChatCompletion.create(
+            model="accounts/fireworks/models/mixtral-8x7b-instruct",
+            messages=[
+                {
+                "role": "user",
+                "content": "Dalam percakapan antara manusia dan AI ini, AI bersikap membantu dan ramah. Jika AI tidak tahu jawabannya, ia akan mengatakan \"Saya tidak tahu\".\n\nAI: Halo, ada yang bisa saya bantu?\nManusia: Apakah saya bisa mendapatkan McDonalds di bandara SeaTac?",
+                }
+            ],
+            stop=["<|im_start|>","<|im_end|>","<|endoftext|>"],
+            stream=True,
+            n=1,
+            top_p=1,
+            top_k=40,
+            presence_penalty=0,
+            frequency_penalty=0,
+            prompt_truncate_len=1024,
+            context_length_exceeded_behavior="truncate",
+            temperature=0.9,
+            max_tokens=4000
+        )
+        ```
+    </Tab>
+
+
+</Tabs>
+
+## Referensi
+- [Percikan Kecerdasan Buatan Umum: Eksperimen Awal dengan GPT-4](https://arxiv.org/abs/2303.12712) (13 April 2023)
+

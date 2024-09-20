@@ -1,0 +1,87 @@
+
+# Penalaran Tidak Langsung dengan LLM (Model Bahasa Besar)
+
+import { Tabs, Tab } from 'nextra/components'
+
+## Latar Belakang
+[Zhang dkk. (2024)](https://arxiv.org/abs/2402.03667) baru-baru ini mengusulkan metode penalaran tidak langsung untuk memperkuat kemampuan penalaran LLM. Metode ini menggunakan logika kontrapositif dan kontradiksi untuk menangani tugas-tugas IR (Information Retrieval) seperti penalaran faktual dan pembuktian matematika. Metode ini terdiri dari dua langkah utama:
+
+1. Meningkatkan pemahaman LLM dengan menambahkan data dan aturan (yaitu, kesetaraan logis dari kontrapositif).
+2. Merancang template prompt untuk mendorong LLM melakukan penalaran tidak langsung berdasarkan pembuktian dengan kontradiksi.
+
+Eksperimen pada LLM seperti GPT-3.5-turbo dan Gemini-pro menunjukkan bahwa metode yang diusulkan meningkatkan akurasi keseluruhan penalaran faktual sebesar 27,33% dan pembuktian matematika sebesar 31,43% dibandingkan dengan metode penalaran langsung tradisional.
+
+Berikut adalah contoh template zero-shot (tanpa pelatihan khusus) untuk pembuktian dengan kontradiksi.
+
+## Prompt
+```
+Jika a+|a|=0, coba buktikan bahwa a<0.
+
+Langkah 1: Daftarkan kondisi dan pertanyaan dalam proposisi asli.
+
+Langkah 2: Gabungkan kondisi yang terdaftar di Langkah 1 menjadi satu. Definisikan sebagai wj.
+
+Langkah 3: Mari kita pikirkan langkah demi langkah. Pertimbangkan semua kemungkinan. Jika irisan antara wj (yang didefinisikan di Langkah 2) dan negasi dari pertanyaan tidak kosong setidaknya dalam satu kemungkinan, proposisi asli adalah salah. Jika tidak, proposisi asli adalah benar.
+
+Jawaban:
+```
+
+## Kode / API
+
+<Tabs items={['GPT-4 (OpenAI)', 'Mixtral MoE 8x7B Instruct (Fireworks)']}>
+    <Tab>
+  
+    ```python
+    from openai import OpenAI
+    client = OpenAI()
+
+    response = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[
+    {
+      "role": "user",
+      "content": "Jika a+|a|=0, coba buktikan bahwa a<0.\n\nLangkah 1: Daftarkan kondisi dan pertanyaan dalam proposisi asli.\n\nLangkah 2: Gabungkan kondisi yang terdaftar di Langkah 1 menjadi satu. Definisikan sebagai wj.\n\nLangkah 3: Mari kita pikirkan langkah demi langkah. Pertimbangkan semua kemungkinan. Jika irisan antara wj (yang didefinisikan di Langkah 2) dan negasi dari pertanyaan tidak kosong setidaknya dalam satu kemungkinan, proposisi asli adalah salah. Jika tidak, proposisi asli adalah benar.\n\nJawaban:"
+    }
+    ],
+    temperature=0,
+    max_tokens=1000,
+    top_p=1,
+    frequency_penalty=0,
+    presence_penalty=0
+    )
+    ```
+    </Tab>
+
+    <Tab>
+        ```python
+        import fireworks.client
+        fireworks.client.api_key = "<FIREWORKS_API_KEY>"
+        completion = fireworks.client.ChatCompletion.create(
+            model="accounts/fireworks/models/mixtral-8x7b-instruct",
+            messages=[
+                {
+                "role": "user",
+                "content": "Jika a+|a|=0, coba buktikan bahwa a<0.\n\nLangkah 1: Daftarkan kondisi dan pertanyaan dalam proposisi asli.\n\nLangkah 2: Gabungkan kondisi yang terdaftar di Langkah 1 menjadi satu. Definisikan sebagai wj.\n\nLangkah 3: Mari kita pikirkan langkah demi langkah. Pertimbangkan semua kemungkinan. Jika irisan antara wj (yang didefinisikan di Langkah 2) dan negasi dari pertanyaan tidak kosong setidaknya dalam satu kemungkinan, proposisi asli adalah salah. Jika tidak, proposisi asli adalah benar.\n\nJawaban:",
+                }
+            ],
+            stop=["<|im_start|>","<|im_end|>","<|endoftext|>"],
+            stream=True,
+            n=1,
+            top_p=1,
+            top_k=40,
+            presence_penalty=0,
+            frequency_penalty=0,
+            prompt_truncate_len=1024,
+            context_length_exceeded_behavior="truncate",
+            temperature=0.9,
+            max_tokens=4000
+        )
+        ```
+    </Tab>
+
+
+</Tabs>
+
+## Referensi
+- [Model Bahasa Besar sebagai Penalar Tidak Langsung: Kontrapositif dan Kontradiksi untuk Penalaran Otomatis](https://arxiv.org/abs/2402.03667) (06 Februari 2024)
+

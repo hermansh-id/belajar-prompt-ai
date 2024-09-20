@@ -1,0 +1,38 @@
+
+# Faktualitas
+
+Model Bahasa Besar (Large Language Models atau LLMs) cenderung menghasilkan jawaban yang terdengar masuk akal dan meyakinkan, tetapi terkadang bisa jadi hanya karangan. Memperbaiki prompt dapat membantu meningkatkan kemampuan model untuk menghasilkan jawaban yang lebih akurat/faktual dan mengurangi kemungkinan menghasilkan jawaban yang tidak konsisten atau dibuat-buat.
+
+Beberapa solusi yang mungkin dilakukan antara lain:
+- Menyediakan informasi yang benar (misalnya, paragraf artikel terkait atau entri Wikipedia) sebagai bagian dari konteks untuk mengurangi kemungkinan model menghasilkan teks yang dibuat-buat.
+- Mengatur model agar menghasilkan jawaban yang kurang beragam dengan mengurangi parameter probabilitas dan menginstruksikannya untuk mengakui (misalnya, dengan mengatakan "Saya tidak tahu") ketika tidak mengetahui jawabannya.
+- Memberikan kombinasi contoh pertanyaan dan jawaban dalam prompt, termasuk yang mungkin diketahui dan tidak diketahui oleh model.
+
+Mari kita lihat contoh sederhana:
+
+*Prompt:*
+```
+T: Apa itu atom?
+J: Atom adalah partikel kecil yang membentuk segala sesuatu.
+
+T: Siapa itu Alvan Muntz?
+J: ?
+
+T: Apa itu Kozar-09?
+J: ?
+
+T: Berapa jumlah bulan yang dimiliki Mars?
+J: Dua, yaitu Phobos dan Deimos.
+
+T: Siapa itu Neto Beto Roberto?
+```
+
+*Output:*
+```
+J: ?
+```
+
+Saya menciptakan nama "Neto Beto Roberto", jadi model benar dalam kasus ini karena menjawab dengan "?". Cobalah untuk mengubah pertanyaan sedikit dan lihat apakah Anda bisa membuatnya bekerja. Ada berbagai cara untuk meningkatkan hal ini lebih lanjut berdasarkan semua yang telah Anda pelajari sejauh ini.
+
+Penjelasan:
+Dalam contoh di atas, kita memberikan model beberapa pertanyaan dengan jawaban yang sudah diketahui dan beberapa pertanyaan yang tidak memiliki jawaban pasti. Ini membantu model untuk lebih baik dalam membedakan antara informasi yang diketahui dan tidak diketahui. Dengan pendekatan ini, model lebih cenderung mengakui ketidaktahuannya daripada menciptakan informasi palsu.

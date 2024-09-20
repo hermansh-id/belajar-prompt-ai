@@ -1,0 +1,84 @@
+
+# Ekstraksi Nama Model dari Makalah Ilmiah
+
+import { Tabs, Tab } from 'nextra/components'
+import {Callout} from 'nextra/components'
+
+## Latar Belakang
+Prompt berikut ini menguji kemampuan LLM (Model Bahasa Besar) untuk melakukan tugas ekstraksi informasi yang melibatkan pengambilan nama-nama model dari abstrak makalah pembelajaran mesin.
+
+## Prompt
+
+```markdown
+Tugas Anda adalah mengekstrak nama-nama model dari abstrak makalah pembelajaran mesin. Jawaban Anda harus berupa array nama model dalam format [\"nama_model\"]. Jika Anda tidak menemukan nama model dalam abstrak atau Anda tidak yakin, kembalikan [\"NA\"]
+
+Abstrak: Model Bahasa Besar (LLM), seperti ChatGPT dan GPT-4, telah merevolusi penelitian pemrosesan bahasa alami dan menunjukkan potensi dalam Kecerdasan Buatan Umum (AGI). Namun, pelatihan dan penerapan LLM yang mahal menimbulkan tantangan bagi penelitian akademis yang transparan dan terbuka. Untuk mengatasi masalah ini, proyek ini membuka sumber (open-source) LLaMA dan Alpaca versi Bahasa Mandarin…
+```
+
+## Template Prompt
+
+```markdown
+Tugas Anda adalah mengekstrak nama-nama model dari abstrak makalah pembelajaran mesin. Jawaban Anda harus berupa array nama model dalam format [\"nama_model\"]. Jika Anda tidak menemukan nama model dalam abstrak atau Anda tidak yakin, kembalikan [\"NA\"]
+
+Abstrak: {input}
+```
+
+## Kode / API
+
+<Tabs items={['GPT-4 (OpenAI)', 'Mixtral MoE 8x7B Instruct (Fireworks)']}>
+    <Tab>
+  
+    ```python
+    from openai import OpenAI
+    client = OpenAI()
+
+    response = client.chat.completions.create(
+    model="gpt-4",
+    messages=[
+        {
+        "role": "user",
+        "content": "Tugas Anda adalah mengekstrak nama-nama model dari abstrak makalah pembelajaran mesin. Jawaban Anda harus berupa array nama model dalam format [\\\"nama_model\\\"]. Jika Anda tidak menemukan nama model dalam abstrak atau Anda tidak yakin, kembalikan [\\\"NA\\\"]\n\nAbstrak: Model Bahasa Besar (LLM), seperti ChatGPT dan GPT-4, telah merevolusi penelitian pemrosesan bahasa alami dan menunjukkan potensi dalam Kecerdasan Buatan Umum (AGI). Namun, pelatihan dan penerapan LLM yang mahal menimbulkan tantangan bagi penelitian akademis yang transparan dan terbuka. Untuk mengatasi masalah ini, proyek ini membuka sumber (open-source) LLaMA dan Alpaca versi Bahasa Mandarin…"
+        }
+    ],
+    temperature=1,
+    max_tokens=250,
+    top_p=1,
+    frequency_penalty=0,
+    presence_penalty=0
+    )
+    ```
+    </Tab>
+
+    <Tab>
+        ```python
+        import fireworks.client
+        fireworks.client.api_key = "<KUNCI_API_FIREWORKS>"
+        completion = fireworks.client.ChatCompletion.create(
+            model="accounts/fireworks/models/mixtral-8x7b-instruct",
+            messages=[
+                {
+                "role": "user",
+                "content": "Tugas Anda adalah mengekstrak nama-nama model dari abstrak makalah pembelajaran mesin. Jawaban Anda harus berupa array nama model dalam format [\\\"nama_model\\\"]. Jika Anda tidak menemukan nama model dalam abstrak atau Anda tidak yakin, kembalikan [\\\"NA\\\"]\n\nAbstrak: Model Bahasa Besar (LLM), seperti ChatGPT dan GPT-4, telah merevolusi penelitian pemrosesan bahasa alami dan menunjukkan potensi dalam Kecerdasan Buatan Umum (AGI). Namun, pelatihan dan penerapan LLM yang mahal menimbulkan tantangan bagi penelitian akademis yang transparan dan terbuka. Untuk mengatasi masalah ini, proyek ini membuka sumber (open-source) LLaMA dan Alpaca versi Bahasa Mandarin…",
+                }
+            ],
+            stop=["<|im_start|>","<|im_end|>","<|endoftext|>"],
+            stream=True,
+            n=1,
+            top_p=1,
+            top_k=40,
+            presence_penalty=0,
+            frequency_penalty=0,
+            prompt_truncate_len=1024,
+            context_length_exceeded_behavior="truncate",
+            temperature=0.9,
+            max_tokens=4000
+        )
+        ```
+    </Tab>
+
+
+</Tabs>
+
+## Referensi
+- [Panduan Rekayasa Prompt](https://www.promptingguide.ai/introduction/examples#information-extraction) (16 Maret 2023)
+

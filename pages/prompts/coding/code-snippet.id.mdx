@@ -1,0 +1,86 @@
+
+# Menghasilkan Potongan Kode dengan LLM (Large Language Models)
+
+import { Tabs, Tab } from 'nextra/components'
+
+## Latar Belakang
+Prompt (perintah) ini menguji kemampuan LLM dalam menghasilkan kode. Caranya dengan meminta LLM untuk membuat potongan kode berdasarkan instruksi yang diberikan dalam bentuk komentar menggunakan `/* <instruksi> */`. 
+
+## Prompt
+```markdown
+/*
+Minta nama pengguna dan ucapkan "Halo"
+*/
+```
+
+## Kode / API
+
+<Tabs items={['GPT-4 (OpenAI)', 'Mixtral MoE 8x7B Instruct (Fireworks)']}>
+    <Tab>
+        ```python
+        from openai import OpenAI
+        client = OpenAI()
+
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {
+                "role": "user",
+                "content": "/*\nMinta nama pengguna dan ucapkan \"Halo\"\n*/"
+                }
+            ],
+            temperature=1,
+            max_tokens=1000,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
+        )
+        ```
+    </Tab>
+
+    <Tab>
+        ```python
+        import fireworks.client
+        fireworks.client.api_key = "<KUNCI_API_FIREWORKS>"
+        completion = fireworks.client.ChatCompletion.create(
+            model="accounts/fireworks/models/mixtral-8x7b-instruct",
+            messages=[
+                {
+                "role": "user",
+                "content": "/*\nMinta nama pengguna dan ucapkan \"Halo\"\n*/",
+                }
+            ],
+            stop=["<|im_start|>","<|im_end|>","<|endoftext|>"],
+            stream=True,
+            n=1,
+            top_p=1,
+            top_k=40,
+            presence_penalty=0,
+            frequency_penalty=0,
+            prompt_truncate_len=1024,
+            context_length_exceeded_behavior="truncate",
+            temperature=0.9,
+            max_tokens=4000
+        )
+        ```
+    </Tab>
+</Tabs>
+
+## Referensi
+- [Panduan Rekayasa Prompt](https://www.promptingguide.ai/introduction/examples#code-generation) (16 Maret 2023)
+
+## Penjelasan Sederhana
+
+Dalam contoh ini, kita belajar cara meminta LLM (model bahasa besar) untuk membuat kode sederhana. Bayangkan LLM seperti asisten pintar yang bisa menulis kode untuk kita.
+
+1. Kita memberikan instruksi ke LLM dalam bentuk komentar kode. Misalnya, kita minta LLM untuk membuat program yang menanyakan nama pengguna dan mengucapkan "Halo".
+
+2. LLM akan membaca instruksi ini dan mencoba membuat kode yang sesuai. Ini seperti meminta teman yang pandai pemrograman untuk membantu kita membuat program sederhana.
+
+3. Kita bisa menggunakan berbagai jenis LLM, seperti GPT-4 dari OpenAI atau Mixtral dari Fireworks. Masing-masing memiliki cara penggunaan yang sedikit berbeda, tapi idenya sama.
+
+4. Kode Python yang diberikan adalah cara kita berkomunikasi dengan LLM. Kita mengirim permintaan (request) ke LLM dan menerima jawaban berupa kode yang dihasilkan.
+
+5. Ada beberapa pengaturan seperti 'temperature' dan 'max_tokens' yang menentukan seberapa kreatif dan panjang jawaban LLM. Ini seperti mengatur tingkat kebebasan LLM dalam menjawab.
+
+Dengan metode ini, kita bisa meminta LLM untuk membantu kita membuat berbagai jenis kode, mulai dari yang sederhana hingga yang lebih kompleks. Ini sangat berguna untuk belajar pemrograman atau mendapatkan ide untuk memecahkan masalah koding.

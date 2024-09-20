@@ -1,0 +1,110 @@
+
+
+# Fungsi Prompt
+
+## Pengantar
+Ketika kita membandingkan antarmuka dialog GPT dengan shell bahasa pemrograman, prompt yang dienkapsulasi dapat dianggap sebagai pembentukan sebuah fungsi. Fungsi ini memiliki nama unik, dan ketika kita memanggil nama ini dengan teks input, fungsi tersebut menghasilkan hasil berdasarkan aturan internal yang telah ditetapkan. Singkatnya, kita membuat prompt yang dapat digunakan kembali dengan nama yang memudahkan kita berinteraksi dengan GPT. Ini seperti memiliki alat praktis yang memungkinkan GPT melakukan tugas-tugas tertentu untuk kita - kita hanya perlu memberikan input, dan kita menerima output yang diinginkan.
+
+Dengan mengenkapsulasi prompt menjadi fungsi, Anda dapat membuat serangkaian fungsi untuk membentuk alur kerja. Setiap fungsi mewakili langkah atau tugas tertentu, dan ketika dikombinasikan dalam urutan tertentu, mereka dapat mengotomatisasi proses yang kompleks atau memecahkan masalah dengan lebih efisien. Pendekatan ini memungkinkan interaksi yang lebih terstruktur dan efisien dengan GPT, yang pada akhirnya meningkatkan kemampuannya dan menjadikannya alat yang kuat untuk menyelesaikan berbagai tugas.
+
+Jadi, sebelum kita dapat menggunakan fungsi, kita perlu memberi tahu GPT tentang fungsi tersebut. Berikut adalah prompt yang mendefinisikan fungsi tersebut.
+
+*Prompt:*
+> Mari kita sebut prompt ini sebagai **meta prompt**.  
+Prompt ini telah diuji pada GPT3.5 dan bekerja lebih baik lagi pada GPT4
+
+```
+Halo, ChatGPT! Saya harap Anda baik-baik saja. Saya menghubungi Anda untuk meminta bantuan dengan fungsi tertentu. Saya memahami bahwa Anda memiliki kemampuan untuk memproses informasi dan melakukan berbagai tugas berdasarkan instruksi yang diberikan. Untuk membantu Anda memahami permintaan saya dengan lebih mudah, saya akan menggunakan template untuk menjelaskan fungsi, input, dan instruksi tentang apa yang harus dilakukan dengan input tersebut. Silakan lihat detailnya di bawah ini:
+
+nama_fungsi: [Nama Fungsi]
+input: [Input]
+aturan: [Instruksi tentang cara memproses input]
+
+Saya mohon Anda untuk memberikan output untuk fungsi ini, berdasarkan detail yang telah saya berikan. Bantuan Anda sangat dihargai. Terima kasih!
+Saya akan mengganti teks di dalam tanda kurung dengan informasi yang relevan untuk fungsi yang ingin saya minta Anda lakukan. Pengantar terperinci ini seharusnya membantu Anda memahami permintaan saya dengan lebih efisien dan memberikan output yang diinginkan. Formatnya adalah nama_fungsi(input) Jika Anda mengerti, cukup jawab dengan satu kata "ok".
+
+```
+
+## Contoh
+
+### Asisten belajar bahasa Inggris
+Misalnya, katakanlah kita ingin menggunakan GPT untuk membantu kita dalam belajar bahasa Inggris. Kita dapat menyederhanakan prosesnya dengan membuat serangkaian fungsi.
+
+Contoh ini telah diuji pada GPT3.5 dan bekerja lebih baik lagi pada GPT4
+
+#### Deskripsi fungsi
+
+Kita perlu menempelkan **meta prompt** yang telah didefinisikan di atas bagian ini di GPT
+
+Kemudian kita akan membuat fungsi `trans_word`.  
+Fungsi ini meminta GPT untuk menerjemahkan bahasa Cina ke bahasa Inggris.
+
+*Prompt:*
+```
+nama_fungsi: [trans_word]
+input: ["teks"]
+aturan: [Saya ingin Anda bertindak sebagai penerjemah bahasa Inggris, pemeriksa ejaan, dan penyempurna. Saya akan memberikan Anda formulir input termasuk "teks" dalam bahasa apa pun dan Anda akan mendeteksi bahasanya, menerjemahkannya, dan menjawab dalam bentuk yang telah diperbaiki dari teks saya, dalam bahasa Inggris.]
+```
+
+Tulis fungsi yang memperluas teks.
+
+*Prompt:*
+```
+nama_fungsi: [expand_word]
+input: ["teks"]
+aturan: [Mohon bertindak sebagai Chatterbox, pemeriksa ejaan, dan penyempurna bahasa. Saya akan memberikan Anda formulir input termasuk "teks" dalam bahasa apa pun, dan keluarkan dalam bahasa aslinya. Saya ingin Anda mempertahankan maknanya sama, tetapi membuatnya lebih sastra.]
+```
+
+Tulis fungsi yang memperbaiki teks.
+
+*Prompt:*
+```
+nama_fungsi: [fix_english]
+input: ["teks"]
+aturan: [Mohon bertindak sebagai ahli bahasa Inggris, pemeriksa ejaan, dan penyempurna bahasa. Saya akan memberikan Anda formulir input termasuk "teks", saya ingin Anda memperbaiki kosakata dan kalimat teks tersebut agar lebih alami dan elegan. Pertahankan maknanya tetap sama.]
+```
+
+Akhirnya, Anda dapat menjalankan fungsi secara independen atau menggabungkannya bersama.
+
+*Prompt:*
+```
+trans_word('婆罗摩火山处于享有"千岛之国"美称的印度尼西亚. 多岛之国印尼有4500座之多的火山, 世界著名的十大活火山有三座在这里.')
+fix_english('Finally, you can run the function independently or chain them together.')
+fix_english(expand_word(trans_word('婆罗摩火山处于享有"千岛之国"美称的印度尼西亚. 多岛之国印尼有4500座之多的火山, 世界著名的十大活火山有三座在这里.')))
+```
+
+Dengan merepresentasikan fungsi-fungsi dalam format ini, Anda dapat dengan jelas melihat nama fungsi, input, dan aturan untuk memproses input masing-masing. Ini memberikan cara yang terorganisir untuk memahami fungsionalitas dan tujuan setiap langkah dalam alur kerja.
+
+_tips:_
+Jika Anda tidak ingin ChatGPT mengeluarkan informasi berlebihan, Anda dapat menambahkan kalimat setelah mendefinisikan aturan fungsi.
+```
+JANGAN MENGATAKAN HAL LAIN SELAIN OK, KECUALI ANDA TIDAK MEMAHAMI FUNGSINYA
+```
+
+### Fungsi dengan beberapa parameter
+Mari kita buat fungsi yang menghasilkan kata sandi dengan mengambil lima parameter input, dan menghasilkan kata sandi yang dihasilkan.
+
+*Prompt:*
+```
+nama_fungsi: [pg]
+input: ["panjang", "huruf_besar", "huruf_kecil", "angka", "karakter_khusus"]
+aturan: [Saya ingin Anda bertindak sebagai pembuat kata sandi untuk individu yang membutuhkan kata sandi yang aman. Saya akan memberikan Anda formulir input termasuk "panjang", "huruf_besar", "huruf_kecil", "angka", dan karakter "khusus". Tugas Anda adalah menghasilkan kata sandi yang kompleks menggunakan formulir input ini dan memberikannya kepada saya. Jangan sertakan penjelasan atau informasi tambahan dalam respons Anda, cukup berikan kata sandi yang dihasilkan. Misalnya, jika formulir inputnya adalah panjang = 8, huruf_besar = 1, huruf_kecil = 5, angka = 2, karakter_khusus = 1, respons Anda harus berupa kata sandi seperti "D5%t9Bgf".]
+```
+```
+pg(panjang = 10, huruf_besar = 1, huruf_kecil = 5, angka = 2, karakter_khusus = 1)
+pg(10,1,5,2,1)
+```
+
+### Pemikiran
+Sekarang, sudah ada banyak proyek yang sedang mengerjakan pemrograman GPT, seperti:
+- [GitHub Copilot](https://github.com/features/copilot)
+- [Microsoft AI](https://www.microsoft.com/en-us/ai)
+- [chatgpt-plugins](https://openai.com/blog/chatgpt-plugins)
+- [LangChain](https://github.com/hwchase17/langchain)
+- [marvin](https://github.com/PrefectHQ/marvin)
+
+Namun, proyek-proyek tersebut dirancang baik untuk pelanggan produk atau untuk pengguna yang dapat membuat kode dengan Python atau bahasa pemrograman lainnya. 
+Untuk pengguna rata-rata, gunakan template sederhana ini untuk pekerjaan sehari-hari dan lakukan beberapa kali iterasi. Gunakan aplikasi catatan untuk mendokumentasikan fungsi, dan bahkan dapat diperbarui menjadi perpustakaan. 
+Sebagai alternatif, beberapa alat ChatGPT open source, seperti [ChatGPT-Next-Web](https://github.com/Yidadaa/ChatGPT-Next-Web), [chatbox](https://github.com/Bin-Huang/chatbox), [PromptAppGPT](https://github.com/mleoking/PromptAppGPT), dan [ChatGPT-Desktop](https://github.com/lencx/ChatGPT), dapat digunakan. Saat ini, ChatGPT-Next-Web memungkinkan penambahan beberapa contoh sebelum memulai obrolan baru. Dan PromptAppGPT mendukung pengembangan aplikasi web berbasis kode rendah berdasarkan template prompt dan memungkinkan siapa saja untuk mengembangkan aplikasi seperti AutoGPT dengan beberapa baris prompt.
+Kita dapat menggunakan fitur ini untuk menambahkan fungsi kita, yang kemudian dapat digunakan.
+

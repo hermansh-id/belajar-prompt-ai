@@ -1,0 +1,86 @@
+
+# Mengevaluasi Fungsi Komposit
+
+import { Tabs, Tab } from 'nextra/components'
+
+## Latar Belakang
+Prompt ini menguji kemampuan matematika sebuah LLM (Large Language Model atau Model Bahasa Besar) dengan memintanya untuk mengevaluasi fungsi komposit yang diberikan.
+
+## Prompt
+
+Misalkan $$g(x) = f^{-1}(x), g(0) = 5, g(4) = 7, g(3) = 2, g(7) = 9, g(9) = 6$$ berapakah nilai $$f(f(f(6)))$$?
+
+## Kode / API
+
+<Tabs items={['GPT-4 (OpenAI)', 'Mixtral MoE 8x7B Instruct (Fireworks)']}>
+    <Tab>
+  
+        ```python
+        from openai import OpenAI
+        client = OpenAI()
+
+        response = client.chat.completions.create(
+        model="gpt-4",
+        messages=[
+            {
+            "role": "user",
+            "content": "Misalkan g(x) = f^{-1}(x), g(0) = 5, g(4) = 7, g(3) = 2, g(7) = 9, g(9) = 6 berapakah nilai f(f(f(6)))?\n"
+            }
+        ],
+        temperature=1,
+        max_tokens=256,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+        )
+        ```
+    </Tab>
+
+    <Tab>
+        ```python
+        import fireworks.client
+        fireworks.client.api_key = "<FIREWORKS_API_KEY>"
+        completion = fireworks.client.ChatCompletion.create(
+            model="accounts/fireworks/models/mixtral-8x7b-instruct",
+            messages=[
+                {
+                "role": "user",
+                "content": "Misalkan g(x) = f^{-1}(x), g(0) = 5, g(4) = 7, g(3) = 2, g(7) = 9, g(9) = 6 berapakah nilai f(f(f(6)))?",
+                }
+            ],
+            stop=["<|im_start|>","<|im_end|>","<|endoftext|>"],
+            stream=True,
+            n=1,
+            top_p=1,
+            top_k=40,
+            presence_penalty=0,
+            frequency_penalty=0,
+            prompt_truncate_len=1024,
+            context_length_exceeded_behavior="truncate",
+            temperature=0.9,
+            max_tokens=4000
+        )
+        ```
+    </Tab>
+
+
+</Tabs>
+
+## Penjelasan
+
+Dalam contoh ini, kita melihat bagaimana kita bisa menguji kemampuan LLM dalam memecahkan masalah matematika yang kompleks. Mari kita uraikan beberapa poin penting:
+
+1. **Fungsi Komposit**: Ini adalah fungsi yang terdiri dari dua atau lebih fungsi yang digabungkan. Dalam kasus ini, kita memiliki f(f(f(6))), yang berarti kita harus menerapkan fungsi f tiga kali berturut-turut.
+
+2. **Fungsi Invers**: g(x) didefinisikan sebagai invers dari f(x). Ini berarti bahwa g "membatalkan" efek dari f. Misalnya, jika f(5) = 0, maka g(0) = 5.
+
+3. **Nilai-nilai yang Diberikan**: Kita diberi beberapa nilai untuk fungsi g. Ini akan membantu kita dalam menentukan nilai-nilai yang sesuai untuk fungsi f.
+
+4. **Penggunaan LLM**: Dengan memberikan prompt ini ke LLM seperti GPT-4 atau Mixtral, kita ingin melihat apakah model tersebut dapat memahami konsep fungsi komposit dan invers, serta menggunakan informasi yang diberikan untuk menghitung hasilnya.
+
+5. **Kode API**: Bagian ini menunjukkan cara kita bisa menggunakan API dari OpenAI (untuk GPT-4) atau Fireworks (untuk Mixtral) untuk mengirimkan prompt ini ke model dan mendapatkan jawabannya.
+
+Dengan menggunakan prompt seperti ini, kita dapat menguji dan mengembangkan kemampuan LLM dalam menangani masalah matematika yang kompleks, yang merupakan bagian penting dari pengembangan AI yang lebih canggih.
+
+## Referensi
+- [Percikan Kecerdasan Buatan Umum: Eksperimen Awal dengan GPT-4](https://arxiv.org/abs/2303.12712) (13 April 2023)

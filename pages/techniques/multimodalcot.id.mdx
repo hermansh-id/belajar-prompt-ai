@@ -1,0 +1,24 @@
+
+# Prompting CoT Multimodal
+
+import { Callout, FileTree } from 'nextra-theme-docs'
+import {Screenshot} from 'components/screenshot'
+import MCOT from '../../img/multimodal-cot.png'
+
+[Zhang dkk. (2023)](https://arxiv.org/abs/2302.00923) baru-baru ini mengusulkan pendekatan prompting chain-of-thought (CoT) multimodal. CoT tradisional berfokus pada modalitas bahasa saja. Sebaliknya, CoT Multimodal menggabungkan teks dan gambar dalam kerangka kerja dua tahap. 
+
+Mari kita bahas secara sederhana:
+1. Tahap pertama melibatkan pembuatan alasan berdasarkan informasi dari teks dan gambar. Ini seperti kita melihat gambar dan membaca teks, lalu menjelaskan apa yang kita pahami.
+2. Tahap kedua adalah penarikan kesimpulan jawaban, yang memanfaatkan alasan-alasan informatif yang dihasilkan sebelumnya. Ini seperti kita menggunakan pemahaman kita untuk menjawab pertanyaan.
+
+Bayangkan ini seperti menjawab soal ujian yang memiliki gambar dan teks. Kita pertama-tama memahami keduanya, lalu menggunakan pemahaman itu untuk menjawab pertanyaan.
+
+Model CoT multimodal (dengan ukuran 1 miliar parameter) mengungguli GPT-3.5 pada benchmark ScienceQA. Ini menunjukkan bahwa menggabungkan pemahaman teks dan gambar bisa menghasilkan jawaban yang lebih baik untuk pertanyaan-pertanyaan ilmiah.
+
+<Screenshot src={MCOT} alt="MCOT" />
+Sumber Gambar: [Zhang dkk. (2023)](https://arxiv.org/abs/2302.00923)
+
+Bacaan lebih lanjut:
+- [Bahasa Bukan Segalanya yang Anda Butuhkan: Menyelaraskan Persepsi dengan Model Bahasa](https://arxiv.org/abs/2302.14045) (Feb 2023)
+
+Artikel ini menjelaskan bahwa untuk membuat AI yang lebih canggih, kita perlu menggabungkan pemahaman bahasa dengan kemampuan memahami gambar dan suara, mirip dengan cara manusia memahami dunia.

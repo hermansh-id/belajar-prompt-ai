@@ -1,0 +1,79 @@
+
+# Bukti Bilangan Prima Tak Terhingga dalam Gaya Shakespeare
+
+import { Tabs, Tab } from 'nextra/components'
+import {Callout} from 'nextra/components'
+
+## Latar Belakang
+Prompt berikut ini menguji kemampuan LLM (Large Language Model atau Model Bahasa Besar) untuk menulis bukti bahwa ada tak terhingga banyaknya bilangan prima dalam gaya drama Shakespeare.
+
+## Prompt
+```markdown
+Tuliskan bukti bahwa ada tak terhingga banyaknya bilangan prima; lakukan dalam gaya drama Shakespeare melalui dialog antara dua pihak yang berdebat tentang bukti tersebut.
+```
+
+## Kode / API
+
+<Tabs items={['GPT-4 (OpenAI)', 'Mixtral MoE 8x7B Instruct (Fireworks)']}>
+    <Tab>
+  
+    ```python
+    from openai import OpenAI
+    client = OpenAI()
+
+    response = client.chat.completions.create(
+    model="gpt-4",
+    messages=[
+        {
+        "role": "user",
+        "content": "Tuliskan bukti bahwa ada tak terhingga banyaknya bilangan prima; lakukan dalam gaya drama Shakespeare melalui dialog antara dua pihak yang berdebat tentang bukti tersebut."
+        }
+    ],
+    temperature=1,
+    max_tokens=1000,
+    top_p=1,
+    frequency_penalty=0,
+    presence_penalty=0
+    )
+    ```
+    </Tab>
+
+    <Tab>
+        ```python
+        import fireworks.client
+        fireworks.client.api_key = "<KUNCI_API_FIREWORKS>"
+        completion = fireworks.client.ChatCompletion.create(
+            model="accounts/fireworks/models/mixtral-8x7b-instruct",
+            messages=[
+                {
+                "role": "user",
+                "content": "Tuliskan bukti bahwa ada tak terhingga banyaknya bilangan prima; lakukan dalam gaya drama Shakespeare melalui dialog antara dua pihak yang berdebat tentang bukti tersebut.",
+                }
+            ],
+            stop=["<|im_start|>","<|im_end|>","<|endoftext|>"],
+            stream=True,
+            n=1,
+            top_p=1,
+            top_k=40,
+            presence_penalty=0,
+            frequency_penalty=0,
+            prompt_truncate_len=1024,
+            context_length_exceeded_behavior="truncate",
+            temperature=0.9,
+            max_tokens=4000
+        )
+        ```
+    </Tab>
+
+
+</Tabs>
+
+## Referensi
+- [Percikan Kecerdasan Buatan Umum: Eksperimen Awal dengan GPT-4](https://arxiv.org/abs/2303.12712) (13 April 2023)
+
+Penjelasan Sederhana:
+- LLM adalah program komputer canggih yang bisa memahami dan menghasilkan teks seperti manusia.
+- Prompt adalah instruksi atau pertanyaan yang kita berikan kepada LLM untuk mendapatkan respons tertentu.
+- Dalam contoh ini, kita meminta LLM untuk menulis bukti matematika dengan gaya unik, menggabungkan logika dengan kreativitas sastra.
+- Kode yang disediakan menunjukkan cara menggunakan dua LLM berbeda (GPT-4 dan Mixtral) untuk menghasilkan teks kreatif berdasarkan prompt yang diberikan.
+- Eksperimen seperti ini membantu kita memahami kemampuan dan batasan AI dalam menggabungkan pengetahuan dari berbagai bidang.

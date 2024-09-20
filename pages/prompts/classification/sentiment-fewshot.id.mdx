@@ -1,0 +1,84 @@
+
+# Klasifikasi Sentimen Few-Shot dengan LLM
+
+import { Tabs, Tab } from 'nextra/components'
+
+## Latar Belakang
+Prompt ini menguji kemampuan klasifikasi teks sebuah LLM (Large Language Model atau Model Bahasa Besar) dengan memintanya untuk mengklasifikasikan potongan teks ke dalam sentimen yang tepat menggunakan contoh few-shot (beberapa contoh).
+
+## Prompt
+```markdown
+This is awesome! // Negatif
+This is bad! // Positif
+Wow that movie was rad! // Positif
+What a horrible show! //
+```
+
+Penjelasan:
+Dalam contoh di atas, kita memberikan beberapa contoh klasifikasi sentimen yang tidak intuitif untuk menguji pemahaman LLM. Tugas LLM adalah melengkapi klasifikasi untuk kalimat terakhir berdasarkan pola yang diberikan.
+
+## Kode / API
+
+<Tabs items={['GPT-4 (OpenAI)', 'Mixtral MoE 8x7B Instruct (Fireworks)']}>
+    <Tab>
+        ```python
+        from openai import OpenAI
+        client = OpenAI()
+
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {
+                "role": "user",
+                "content": "This is awesome! // Negative\nThis is bad! // Positive\nWow that movie was rad! // Positive\nWhat a horrible show! //"
+                }
+            ],
+            temperature=1,
+            max_tokens=256,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
+        )
+        ```
+
+        Penjelasan:
+        Kode ini menggunakan API OpenAI untuk mengirim prompt ke model GPT-4. Parameter seperti 'temperature' dan 'max_tokens' mengontrol kreativitas dan panjang respons model.
+    </Tab>
+
+    <Tab>
+        ```python
+        import fireworks.client
+        fireworks.client.api_key = "<FIREWORKS_API_KEY>"
+        completion = fireworks.client.ChatCompletion.create(
+            model="accounts/fireworks/models/mixtral-8x7b-instruct",
+            messages=[
+                {
+                "role": "user",
+                "content": "This is awesome! // Negative\nThis is bad! // Positive\nWow that movie was rad! // Positive\nWhat a horrible show! //",
+                }
+            ],
+            stop=["<|im_start|>","<|im_end|>","<|endoftext|>"],
+            stream=True,
+            n=1,
+            top_p=1,
+            top_k=40,
+            presence_penalty=0,
+            frequency_penalty=0,
+            prompt_truncate_len=1024,
+            context_length_exceeded_behavior="truncate",
+            temperature=0.9,
+            max_tokens=4000
+        )
+        ```
+
+        Penjelasan:
+        Kode ini menggunakan API Fireworks untuk mengirim prompt ke model Mixtral. Parameter seperti 'top_k' dan 'temperature' mempengaruhi variasi dan kreativitas respons model.
+    </Tab>
+</Tabs>
+
+
+## Referensi
+- [Panduan Rekayasa Prompt](https://www.promptingguide.ai/techniques/fewshot) (16 Maret 2023)
+
+Catatan Tambahan:
+Teknik few-shot ini sangat berguna dalam situasi di mana kita ingin model memahami tugas spesifik tanpa perlu pelatihan ulang. Dengan memberikan beberapa contoh, kita "mengajarkan" model cara melakukan tugas tersebut dalam konteks percakapan.

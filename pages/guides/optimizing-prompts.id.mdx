@@ -1,0 +1,54 @@
+
+## Membuat Prompt yang Efektif untuk LLM
+
+<iframe width="100%"
+  height="415px"
+  src="https://www.youtube.com/embed/8KNKjBBm1Kw?si=puEJrGFe9XSu8O-A"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+/>
+
+Model Bahasa Besar (Large Language Models atau LLM) memiliki kemampuan luar biasa untuk berbagai tugas, tetapi efektivitasnya sangat bergantung pada kualitas prompt yang diberikan. Artikel blog ini merangkum aspek-aspek penting dalam merancang prompt yang efektif untuk memaksimalkan kinerja LLM.
+
+### Pertimbangan Utama dalam Merancang Prompt
+
+**Kejelasan dan Spesifisitas:** 
+Seperti ketika memberikan instruksi kepada manusia, prompt harus dengan jelas menyatakan hasil yang diinginkan. Ambiguitas dapat menyebabkan output yang tidak diharapkan atau tidak relevan.
+
+**Input dan Output Terstruktur:** 
+Menyusun input menggunakan format seperti JSON atau XML dapat meningkatkan kemampuan LLM dalam memahami dan memproses informasi. Demikian pula, menentukan format output yang diinginkan (misalnya, daftar, paragraf, atau potongan kode) meningkatkan relevansi respons.
+
+**Pembatas untuk Meningkatkan Struktur:** 
+Menggunakan karakter khusus sebagai pembatas dalam prompt dapat memperjelas struktur dan memisahkan elemen-elemen berbeda, meningkatkan pemahaman model.
+
+**Pemecahan Tugas untuk Operasi Kompleks:** 
+Daripada memberikan LLM prompt tunggal yang mencakup banyak tugas, memecah proses kompleks menjadi sub-tugas yang lebih sederhana secara signifikan meningkatkan kejelasan dan kinerja. Ini memungkinkan model untuk fokus pada setiap sub-tugas secara individual, yang pada akhirnya menghasilkan hasil keseluruhan yang lebih akurat.
+
+### Strategi Prompting Lanjutan
+
+**Prompting dengan Beberapa Contoh (Few-Shot Prompting):** 
+Memberikan LLM beberapa contoh pasangan input-output yang diinginkan membantu mengarahkannya untuk menghasilkan respons berkualitas tinggi dengan mendemonstrasikan pola yang diharapkan. Pelajari lebih lanjut tentang few-shot prompting [di sini](https://www.promptingguide.ai/techniques/fewshot).
+
+**Prompting dengan Rantai Pemikiran (Chain-of-Thought Prompting):** 
+Mendorong model untuk "berpikir langkah demi langkah" dengan secara eksplisit memintanya untuk memecah tugas kompleks menjadi langkah-langkah penalaran intermediate meningkatkan kemampuannya dalam memecahkan masalah yang memerlukan deduksi logis. Pelajari lebih lanjut tentang chain-of-thought prompting [di sini](https://www.promptingguide.ai/techniques/cot).
+
+**ReAct (Reason + Act):** 
+Metode ini berfokus pada memunculkan penalaran tingkat lanjut, perencanaan, dan bahkan penggunaan alat dari LLM. Dengan menyusun prompt untuk mendorong kemampuan ini, pengembang dapat membuka aplikasi yang lebih canggih dan kuat. Pelajari lebih lanjut tentang ReAct [di sini](https://www.promptingguide.ai/techniques/react).
+
+### Kesimpulan
+
+Merancang prompt yang efektif sangat penting untuk memanfaatkan potensi penuh LLM. Dengan mengikuti praktik terbaik seperti kejelasan, format terstruktur, pemecahan tugas, dan memanfaatkan teknik lanjutan seperti prompting dengan beberapa contoh, rantai pemikiran, dan ReAct, pengembang dapat secara signifikan meningkatkan kualitas, akurasi, dan kompleksitas output yang dihasilkan oleh LLM yang kuat ini.
+
+### Ingin Belajar Lebih Banyak?
+
+import { Callout } from 'nextra/components'
+
+<Callout type= "info" emoji="🎉">
+Kami dengan gembira meluncurkan situs web kursus baru kami dan merilis kursus pertama kami tentang [Pengantar Rekayasa Prompt](https://dair-ai.thinkific.com/courses/introduction-prompt-engineering). 
+
+Gunakan kode PROMPTING20 untuk mendapatkan diskon tambahan 20%.
+
+PENTING: Diskon terbatas untuk 500 siswa pertama. 
+
+[Bergabung Sekarang](https://dair-ai.thinkific.com/courses/introduction-prompt-engineering)!
+</Callout>

@@ -1,0 +1,198 @@
+
+# Menghasilkan Kode
+
+import { Callout, FileTree } from 'nextra-theme-docs'
+import {Screenshot} from 'components/screenshot'
+import CODE1 from '../../img/code-generation/chat-mode.png'
+
+<Callout emoji="⚠️">
+  Bagian ini sedang dalam pengembangan.
+</Callout>
+
+Model Bahasa Besar (LLM) seperti ChatGPT sangat efektif dalam menghasilkan kode. Di bagian ini, kita akan membahas banyak contoh cara menggunakan ChatGPT untuk menghasilkan kode.
+
+Semua contoh di bawah ini menggunakan OpenAI Playground (Mode Chat) dan model `gpt-3.5-turbo`.
+
+Seperti semua model chat dari OpenAI, Anda dapat menggunakan 'Pesan Sistem' untuk menentukan perilaku dan format respons. Kita akan menggunakan Pesan Sistem berikut untuk contoh-contoh prompt:
+
+```
+Anda adalah asisten kode yang membantu dan dapat mengajari pengembang junior cara membuat kode. Bahasa pilihan Anda adalah Python. Jangan menjelaskan kodenya, cukup hasilkan blok kode saja.
+```
+
+## Contoh Dasar
+
+'Pesan Pengguna' kemudian akan menjadi prompt itu sendiri dengan instruksi kode spesifik yang ingin Anda hasilkan dari model. Berikut adalah gambaran prompt dasar pertama untuk menghasilkan kode. Perhatikan bahwa kode akhir dihasilkan oleh 'Asisten'.
+
+<Screenshot src={CODE1} alt="CODE1" />
+
+Berikut adalah promptnya jika Anda ingin mencobanya sendiri:
+
+```
+Tulis kode yang meminta nama pengguna dan ucapkan "Halo"
+```
+
+## Mengubah Komentar Menjadi Kode
+
+Anda juga dapat menggunakan kemampuan menghasilkan kode dari LLM ini untuk membuat kode dari komentar saja. Mari kita lihat contoh lain yang memberikan instruksi sebagai blok komentar:
+
+*Prompt:*
+```
+"""
+1. Buat daftar film
+2. Buat daftar peringkat untuk film-film tersebut
+3. Gabungkan keduanya menjadi objek json berisi 10 film dengan peringkatnya.
+"""
+```
+
+*Output:*
+```python
+film = ["The Shawshank Redemption", "The Godfather", "The Dark Knight", "Schindler's List", "Pulp Fiction", "The Lord of the Rings: The Return of the King", "Forrest Gump", "Star Wars: Episode V - The Empire Strikes Back", "Inception", "The Silence of the Lambs"]
+
+peringkat = [9.3, 9.2, 9.0, 8.9, 8.9, 8.9, 8.8, 8.7, 8.7, 8.6]
+
+film_peringkat = {}
+
+for i in range(len(film)):
+    film_peringkat[film[i]] = peringkat[i]
+
+objek_json = json.dumps(film_peringkat, indent=4)
+
+print(objek_json)
+```
+
+Kode yang dihasilkan tampak seperti kode yang berfungsi. Namun, output tidak mengandung pernyataan `import` penting, yaitu `import json`. Meskipun model-model ini menghasilkan kode yang berfungsi, Anda harus memperhatikan detail-detail kecil seperti ini dan selalu memastikan untuk menguji kode Anda.
+
+## Melengkapi Fungsi atau Baris Berikutnya
+
+LLM ini juga telah diintegrasikan ke dalam alat seperti GitHub Copilot yang membuatnya berguna bagi pengembang. Salah satu fitur yang berguna adalah kemampuan model untuk melengkapi fungsi.
+
+*Prompt:*
+```python
+# fungsi untuk mengalikan dua angka dan menambahkan 75 padanya
+
+def kali(
+```
+
+*Output:*
+```python
+a, b):
+    hasil = a * b
+    hasil += 75
+    return hasil
+```
+
+## Menghasilkan Query MySQL
+
+Selain contoh dasar menghasilkan kode di atas, Anda dapat menggunakan model untuk menghasilkan kode yang berguna dalam aspek pemrograman lainnya seperti membuat dan menguji query MySQL.
+
+Misalnya Anda memiliki dataset dengan beberapa informasi yang dapat Anda sertakan sebagai bagian dari prompt dan kemudian menginstruksikan model untuk menghasilkan query tertentu. Contohnya:
+
+```
+"""
+Tabel jurusan, kolom = [IdJurusan, NamaJurusan]
+Tabel mahasiswa, kolom = [IdJurusan, IdMahasiswa, NamaMahasiswa]
+Buat query MySQL untuk semua mahasiswa di jurusan Ilmu Komputer
+"""
+```
+
+*Output:*
+```mysql
+SELECT mahasiswa.IdMahasiswa, mahasiswa.NamaMahasiswa
+FROM mahasiswa
+INNER JOIN jurusan
+ON mahasiswa.IdJurusan = jurusan.IdJurusan
+WHERE jurusan.NamaJurusan = 'Ilmu Komputer';
+```
+
+Model menghasilkan sebuah query! Namun, dalam contoh ini kita membuat database sendiri sehingga kita tidak memiliki database untuk menguji query yang dihasilkan. Jika Anda menguji contoh ini, akan berguna untuk membuat database ini. Untungnya, Anda dapat menggunakan ChatGPT untuk menghasilkannya juga. Salah satu pendekatan adalah menggunakan versi yang dimodifikasi dari prompt di atas dengan instruksi yang sedikit berbeda untuk menghasilkan skema database:
+
+```mysql
+Tabel jurusan, kolom = [IdJurusan, NamaJurusan]
+Tabel mahasiswa, kolom = [IdJurusan, IdMahasiswa, NamaMahasiswa]
+Buat skema database yang valid dengan tabel dan kolom di atas
+```
+
+Model menghasilkan skema berikut:
+
+```mysql
+CREATE TABLE jurusan (
+  IdJurusan INT PRIMARY KEY,
+  NamaJurusan VARCHAR(50)
+);
+
+CREATE TABLE mahasiswa (
+  IdJurusan INT,
+  IdMahasiswa INT PRIMARY KEY,
+  NamaMahasiswa VARCHAR(50),
+  FOREIGN KEY (IdJurusan) REFERENCES jurusan(IdJurusan)
+);
+```
+
+Anda dapat membuat database sementara menggunakan sesuatu seperti [sqliteonline.com](https://sqliteonline.com/).
+
+Anda juga akan membutuhkan data dummy untuk menguji apakah query yang dihasilkan awalnya valid. Mari kita gunakan ChatGPT untuk ini juga! Promptnya bisa terlihat seperti berikut:
+
+```mysql
+CREATE TABLE jurusan (
+  IdJurusan INT PRIMARY KEY,
+  NamaJurusan VARCHAR(50)
+);
+
+CREATE TABLE mahasiswa (
+  IdJurusan INT,
+  IdMahasiswa INT PRIMARY KEY,
+  NamaMahasiswa VARCHAR(50),
+  FOREIGN KEY (IdJurusan) REFERENCES jurusan(IdJurusan)
+);
+
+Berdasarkan skema database di atas, hasilkan pernyataan insert yang valid termasuk 4 baris untuk setiap tabel.
+```
+
+Output dengan pernyataan insert:
+
+```mysql
+INSERT INTO jurusan (IdJurusan, NamaJurusan)
+VALUES (1, 'Ilmu Komputer'), (2, 'Matematika'), (3, 'Fisika'), (4, 'Biologi');
+
+INSERT INTO mahasiswa (IdJurusan, IdMahasiswa, NamaMahasiswa)
+VALUES (1, 101, 'Budi Santoso'), (1, 102, 'Siti Rahayu'), (2, 201, 'Andi Wijaya'), (2, 202, 'Dewi Lestari');
+```
+
+Sekarang Anda memiliki database dan data dummy, Anda dapat menguji query asli. Berdasarkan data dummy, hasilnya seharusnya dua baris dengan `Siti Rahayu` dan `Budi Santoso`.
+
+## Menjelaskan Kode
+Jika Anda sedang belajar memprogram dalam bahasa tertentu, mungkin berguna untuk meminta model menjelaskan bagian-bagian kode tertentu. Mari kita gunakan kembali query yang dihasilkan di atas dan minta model untuk menjelaskannya.
+
+Jika Anda menggunakan Pesan Sistem yang sama dari sebelumnya, berhati-hatilah dengan cara Anda menginstruksikan model. Misalnya, jika kita menggunakan contoh berikut, model akan mengeluh bahwa ia adalah asisten kode dalam Python tetapi tetap memberikan penjelasan. Terkadang model menolak untuk menghasilkan apa yang Anda instruksikan karena dirancang untuk mengikuti Pesan Sistem.
+
+*Prompt:*
+
+```mysql
+SELECT mahasiswa.IdMahasiswa, mahasiswa.NamaMahasiswa
+FROM mahasiswa
+INNER JOIN jurusan
+ON mahasiswa.IdJurusan = jurusan.IdJurusan
+WHERE jurusan.NamaJurusan = 'Ilmu Komputer';
+
+Jelaskan pernyataan SQL di atas.
+```
+
+*Output:*
+
+```
+Maaf, sebagai asisten kode dalam Python, saya tidak dapat menghasilkan kode SQL. Namun, saya dapat menjelaskan tujuan dari pernyataan SQL yang diberikan.
+
+Pernyataan SQL ini memilih kolom `IdMahasiswa` dan `NamaMahasiswa` dari tabel `mahasiswa`, di mana kolom `NamaJurusan` dalam tabel `jurusan` sama dengan 'Ilmu Komputer'. Untuk mencapai ini, pernyataan tersebut melakukan inner join pada kolom `IdJurusan` antara tabel `mahasiswa` dan `jurusan`.
+
+Dengan kata lain, pernyataan ini memilih nama dan ID mahasiswa yang terdaftar di jurusan Ilmu Komputer.
+```
+
+## Mengedit Kode
+Contoh akan segera hadir!
+
+## Debugging Kode
+Contoh akan segera hadir!
+
+## Praktik Terbaik
+Akan segera hadir!
+

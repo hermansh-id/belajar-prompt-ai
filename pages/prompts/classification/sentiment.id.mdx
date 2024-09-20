@@ -1,0 +1,78 @@
+
+# Klasifikasi Sentimen dengan LLM (Model Bahasa Besar)
+
+import { Tabs, Tab } from 'nextra/components'
+
+## Latar Belakang
+Prompt ini menguji kemampuan klasifikasi teks LLM dengan memintanya untuk mengklasifikasikan sebuah teks.
+
+## Prompt
+```
+Klasifikasikan teks berikut ke dalam kategori netral, negatif, atau positif
+Teks: Menurut saya makanannya biasa saja.
+Sentimen:
+```
+
+## Template Prompt
+```
+Klasifikasikan teks berikut ke dalam kategori netral, negatif, atau positif
+Teks: {input}
+Sentimen:
+```
+
+## Kode / API
+
+<Tabs items={['GPT-4 (OpenAI)', 'Mixtral MoE 8x7B Instruct (Fireworks)']}>
+    <Tab>
+        ```python
+        from openai import OpenAI
+        client = OpenAI()
+
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {
+                "role": "user",
+                "content": "Klasifikasikan teks berikut ke dalam kategori netral, negatif, atau positif\nTeks: Menurut saya makanannya biasa saja.\nSentimen:\n"
+                }
+            ],
+            temperature=1,
+            max_tokens=256,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
+        )
+        ```
+    </Tab>
+
+    <Tab>
+        ```python
+        import fireworks.client
+        fireworks.client.api_key = "<KUNCI_API_FIREWORKS>"
+        completion = fireworks.client.ChatCompletion.create(
+            model="accounts/fireworks/models/mixtral-8x7b-instruct",
+            messages=[
+                {
+                "role": "user",
+                "content": "Klasifikasikan teks berikut ke dalam kategori netral, negatif, atau positif\nTeks: Menurut saya makanannya biasa saja.\nSentimen:\n",
+                }
+            ],
+            stop=["<|im_start|>","<|im_end|>","<|endoftext|>"],
+            stream=True,
+            n=1,
+            top_p=1,
+            top_k=40,
+            presence_penalty=0,
+            frequency_penalty=0,
+            prompt_truncate_len=1024,
+            context_length_exceeded_behavior="truncate",
+            temperature=0.9,
+            max_tokens=4000
+        )
+        ```
+    </Tab>
+</Tabs>
+
+## Referensi
+- [Panduan Rekayasa Prompt](https://www.promptingguide.ai/introduction/examples#text-classification) (16 Maret 2023)
+

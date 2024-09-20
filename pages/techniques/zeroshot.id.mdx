@@ -1,0 +1,36 @@
+
+# Prompting Tanpa Contoh (Zero-Shot Prompting)
+
+import {Bleed} from 'nextra-theme-docs'
+
+<iframe width="100%"
+  height="415px"
+  src="https://www.youtube.com/embed/ZTaHqdkxUMs?si=EDLjgAxuFxFcrSM3" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+  />
+
+Model bahasa besar (Large Language Models atau LLMs) saat ini, seperti GPT-3.5 Turbo, GPT-4, dan Claude 3, telah dilatih untuk mengikuti instruksi dan dilatih dengan jumlah data yang sangat besar. Pelatihan skala besar ini membuat model-model tersebut mampu melakukan beberapa tugas tanpa perlu contoh terlebih dahulu, yang disebut sebagai "zero-shot" atau "tanpa contoh".
+
+Prompting tanpa contoh berarti kita memberikan instruksi langsung kepada model untuk melakukan tugas tanpa memberikan contoh tambahan. Ini seperti meminta seseorang untuk melakukan tugas tanpa menunjukkan cara melakukannya terlebih dahulu.
+
+Kita telah mencoba beberapa contoh prompting tanpa contoh di bagian sebelumnya. Berikut adalah salah satu contohnya (yaitu, klasifikasi teks):
+
+*Prompt:*
+```
+Klasifikasikan teks berikut ke dalam kategori netral, negatif, atau positif.
+
+Teks: Menurut saya liburannya biasa saja.
+Sentimen:
+```
+
+*Output:*
+```
+Netral
+```
+
+Perhatikan bahwa dalam prompt di atas, kita tidak memberikan model contoh teks beserta klasifikasinya. LLM sudah memahami konsep "sentimen" - inilah kemampuan zero-shot yang bekerja.
+
+Pelatihan instruksi (instruction tuning) telah terbukti meningkatkan kemampuan belajar tanpa contoh [Wei et al. (2022)](https://arxiv.org/pdf/2109.01652.pdf). Pelatihan instruksi pada dasarnya adalah konsep melatih model menggunakan dataset yang dijelaskan melalui instruksi. Selain itu, [RLHF](https://arxiv.org/abs/1706.03741) (pembelajaran penguatan dari umpan balik manusia) telah diadopsi untuk meningkatkan pelatihan instruksi di mana model disesuaikan agar lebih sesuai dengan preferensi manusia. Perkembangan terbaru ini menjadi dasar model-model seperti ChatGPT. Kita akan membahas semua pendekatan dan metode ini di bagian-bagian selanjutnya.
+
+Ketika prompting tanpa contoh tidak berhasil, disarankan untuk memberikan demonstrasi atau contoh dalam prompt, yang disebut sebagai prompting dengan sedikit contoh (few-shot prompting). Ini seperti memberikan beberapa contoh sebelum meminta seseorang melakukan tugas. Di bagian selanjutnya, kita akan mendemonstrasikan prompting dengan sedikit contoh.
+

@@ -1,0 +1,56 @@
+
+# Penyimpanan Konteks dengan Gemini 1.5 Flash
+
+import {Cards, Card} from 'nextra-theme-docs'
+import {CodeIcon} from 'components/icons'
+
+Google baru-baru ini merilis fitur baru yang disebut [penyimpanan konteks](https://ai.google.dev/gemini-api/docs/caching?lang=python) (context caching) yang tersedia melalui API Gemini untuk model Gemini 1.5 Pro dan Gemini 1.5 Flash. Panduan ini memberikan contoh dasar cara menggunakan penyimpanan konteks dengan Gemini 1.5 Flash.
+
+<iframe width="100%"
+  height="415px"
+  src="https://www.youtube.com/embed/987Pd89EDPs?si=j43isgNb0uwH5AeI" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+  />
+
+
+https://youtu.be/987Pd89EDPs?si=j43isgNb0uwH5AeI
+
+### Kasus Penggunaan: Menganalisis Makalah ML Selama Satu Tahun
+
+Panduan ini menunjukkan bagaimana Anda dapat menggunakan penyimpanan konteks untuk menganalisis ringkasan dari semua [makalah ML yang telah kami dokumentasikan selama setahun terakhir](https://github.com/dair-ai/ML-Papers-of-the-Week). Ringkasan ini disimpan dalam file teks, yang sekarang dapat dimasukkan ke model Gemini 1.5 Flash dan diquery (ditanyakan) secara efisien.
+
+### Proses: Mengunggah, Menyimpan, dan Menanyakan
+
+1. **Persiapan Data:** Pertama, ubah file readme (yang berisi ringkasan) menjadi file teks biasa.
+2. **Menggunakan API Gemini:** Anda dapat mengunggah file teks menggunakan pustaka `generativeai` dari Google.
+3. **Menerapkan Penyimpanan Konteks:** Cache (penyimpanan sementara) dibuat menggunakan fungsi `caching.CachedContent.create()`. Ini melibatkan:
+    * Menentukan model Gemini Flash 1.5.
+    * Memberikan nama untuk cache.
+    * Mendefinisikan instruksi untuk model (misalnya, "Anda adalah peneliti AI ahli...").
+    * Mengatur waktu hidup (TTL) untuk cache (misalnya, 15 menit).
+4. **Membuat Model:** Kemudian kita membuat instance model generatif menggunakan konten yang disimpan.
+5. **Menanyakan:** Kita dapat mulai menanyakan model dengan pertanyaan dalam bahasa alami seperti:
+    * "Bisakah Anda memberi tahu saya makalah AI terbaru minggu ini?"
+    * "Bisakah Anda mendaftar makalah yang menyebutkan Mamba? Sebutkan judul makalah dan ringkasannya."
+    * "Apa saja inovasi seputar LLM konteks panjang? Sebutkan judul makalah dan ringkasannya."
+
+Hasilnya menjanjikan. Model berhasil mengambil dan meringkas informasi dari file teks dengan akurat. Penyimpanan konteks terbukti sangat efisien, menghilangkan kebutuhan untuk mengirim seluruh file teks berulang kali dengan setiap pertanyaan.
+
+Alur kerja ini berpotensi menjadi alat yang berharga bagi para peneliti, memungkinkan mereka untuk:
+
+* Dengan cepat menganalisis dan menanyakan sejumlah besar data penelitian.
+* Mengambil temuan tertentu tanpa perlu mencari secara manual melalui dokumen.
+* Melakukan sesi penelitian interaktif tanpa membuang token prompt.
+
+Kami sangat antusias untuk mengeksplorasi lebih lanjut aplikasi penyimpanan konteks, terutama dalam skenario yang lebih kompleks seperti alur kerja agentic (agen AI yang dapat bekerja secara mandiri).
+
+Notebook (buku catatan digital) dapat ditemukan di bawah ini:
+
+<Cards>
+    <Card 
+        icon={<CodeIcon />}
+        title="Penyimpanan Konteks dengan API Gemini"
+        href="https://github.com/dair-ai/Prompt-Engineering-Guide/blob/main/notebooks/gemini-context-caching.ipynb"
+    />
+</Cards>
+

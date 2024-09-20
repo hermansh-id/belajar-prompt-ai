@@ -1,0 +1,78 @@
+
+# Menciptakan Kata-kata Baru
+
+import { Tabs, Tab } from 'nextra/components'
+
+## Latar Belakang
+Prompt ini menguji kemampuan LLM (Large Language Model atau Model Bahasa Besar) untuk menciptakan kata-kata baru dan menggunakannya dalam kalimat. Ini seperti permainan kreatif yang membantu kita memahami sejauh mana LLM dapat berinovasi dengan bahasa.
+
+## Prompt
+
+```markdown
+"Whatpu" adalah hewan kecil berbulu yang berasal dari Tanzania. Contoh kalimat yang menggunakan kata whatpu adalah:
+Kami sedang berwisata di Afrika dan melihat whatpu-whatpu yang sangat lucu.
+
+"Farduddle" berarti melompat-lompat dengan sangat cepat. Contoh kalimat yang menggunakan kata farduddle adalah:
+```
+
+## Kode / API
+
+<Tabs items={['GPT-4 (OpenAI)', 'Mixtral MoE 8x7B Instruct (Fireworks)']}>
+    <Tab>
+  
+        ```python
+        from openai import OpenAI
+        client = OpenAI()
+
+        response = client.chat.completions.create(
+        model="gpt-4",
+        messages=[
+            {
+            "role": "user",
+            "content": "\"Whatpu\" adalah hewan kecil berbulu yang berasal dari Tanzania. Contoh kalimat yang menggunakan kata whatpu adalah:\nKami sedang berwisata di Afrika dan melihat whatpu-whatpu yang sangat lucu.\n\n\"Farduddle\" berarti melompat-lompat dengan sangat cepat. Contoh kalimat yang menggunakan kata farduddle adalah:"
+            }
+        ],
+        temperature=1,
+        max_tokens=256,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+        )
+        ```
+    </Tab>
+
+    <Tab>
+        ```python
+        import fireworks.client
+        fireworks.client.api_key = "<FIREWORKS_API_KEY>"
+        completion = fireworks.client.ChatCompletion.create(
+            model="accounts/fireworks/models/mixtral-8x7b-instruct",
+            messages=[
+                {
+                "role": "user",
+                "content": "\"Whatpu\" adalah hewan kecil berbulu yang berasal dari Tanzania. Contoh kalimat yang menggunakan kata whatpu adalah:\nKami sedang berwisata di Afrika dan melihat whatpu-whatpu yang sangat lucu.\n\n\"Farduddle\" berarti melompat-lompat dengan sangat cepat. Contoh kalimat yang menggunakan kata farduddle adalah:",
+                }
+            ],
+            stop=["<|im_start|>","<|im_end|>","<|endoftext|>"],
+            stream=True,
+            n=1,
+            top_p=1,
+            top_k=40,
+            presence_penalty=0,
+            frequency_penalty=0,
+            prompt_truncate_len=1024,
+            context_length_exceeded_behavior="truncate",
+            temperature=0.9,
+            max_tokens=4000
+        )
+        ```
+    </Tab>
+
+
+</Tabs>
+
+## Referensi
+- [Percikan Kecerdasan Buatan Umum: Eksperimen Awal dengan GPT-4](https://www.promptingguide.ai/techniques/fewshot) (13 April 2023)
+
+Penjelasan Sederhana:
+Dalam contoh ini, kita melihat bagaimana komputer pintar (LLM) bisa diajak bermain-main dengan bahasa. Kita memberi tahu komputer tentang kata baru yang kita buat, seperti "whatpu" (hewan lucu dari Tanzania) dan "farduddle" (melompat cepat). Kemudian, kita minta komputer untuk membuat kalimat menggunakan kata-kata baru ini. Ini membantu kita memahami seberapa kreatif dan fleksibel komputer dalam menggunakan bahasa, mirip seperti anak kecil yang belajar kata-kata baru dan mencoba menggunakannya dalam percakapan.

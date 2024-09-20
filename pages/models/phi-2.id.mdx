@@ -1,0 +1,118 @@
+
+# Phi-2
+
+import {Screenshot} from 'components/screenshot'
+import PHI2 from '../../img/phi-2/phi-2-benchmark.png'
+import PHI2SAFETY from '../../img/phi-2/phi-2-safety.png'
+import PHI2PERFORMANCE from '../../img/phi-2/phi-2-performance.png'
+import PHI2PHYSICS from '../../img/phi-2/phi-2-physics.png'
+import PHI2CORRECTING from '../../img/phi-2/phi-2-correcting.png'
+
+Dalam panduan ini, kita akan membahas tentang Phi-2, sebuah model bahasa dengan 2,7 miliar parameter. Kita akan mempelajari cara menggunakan Phi-2, kemampuannya, serta tips, aplikasi, batasan, referensi penting, dan bahan bacaan tambahan terkait model bahasa besar (LLM) Phi-2 ini.
+
+## Pengenalan Phi-2
+Phi-2 adalah model bahasa kecil (SLM) terbaru yang dirilis oleh Microsoft Research. Phi-2 merupakan penerus dari model sebelumnya, yaitu Phi-1 dan Phi-1.5.
+
+Phi-1 adalah model dengan 1,3 miliar parameter yang dilatih menggunakan data "kualitas buku teks" dari internet (6 miliar token) dan buku teks serta latihan yang dibuat secara sintetis menggunakan GPT-3.5 (1 miliar token) ([Gunasekar et al. 2023](https://arxiv.org/abs/2306.11644)). Model ini bekerja dengan baik untuk tugas pembuatan kode Python.
+
+[Phi-1.5](https://arxiv.org/abs/2309.05463) merupakan pengembangan dari model sebelumnya dan berfokus pada kemampuan penalaran akal sehat dan pemahaman bahasa. Phi-1.5 mampu melakukan tugas penalaran kompleks seperti matematika tingkat sekolah dasar dan tugas pemrograman dasar, dan kinerjanya sebanding dengan model yang 5 kali lebih besar.
+
+Phi-2, sebuah model dengan 2,7 miliar parameter, meningkatkan kemampuan penalaran dan pemahaman bahasa. Phi-2 mengungguli model-model yang ukurannya hingga 25 kali lebih besar dan sekarang memiliki Lisensi MIT yang memungkinkannya digunakan dalam lingkungan komersial.
+
+## Wawasan & Evaluasi Phi-2
+Para peneliti LLM tertarik untuk menyelidiki apakah model bahasa kecil memiliki kemampuan yang muncul secara alami seperti model yang lebih besar, dan apakah ada teknik pelatihan yang dapat membantu mencapai hal ini.
+
+Model ini dilatih menggunakan data "kualitas buku teks" (1,4 triliun token dengan beberapa kali pengulangan) termasuk dataset sintetis yang membantu mengajarkan model tentang penalaran akal sehat dan pengetahuan umum. Data ini diperkaya dengan konten pendidikan dan konten web berkualitas tinggi. Pelatihan Phi-2 memakan waktu 14 hari menggunakan 96 GPU A100. Tidak ada RLHF (Reinforcement Learning from Human Feedback) atau pelatihan instruksi tambahan yang diterapkan.
+
+Pengetahuan dari Phi-1.5 ditransfer ke Phi-2, yang membantu dalam konvergensi model dan peningkatan kinerja di berbagai tolok ukur. Gambar di bawah ini menunjukkan perbandingan kinerja antara Phi-2 (2,7B) dan Phi-1.5 (1,3B) dalam hal penalaran akal sehat, penalaran matematika, pembuatan kode, dan tolok ukur pemahaman bahasa lainnya. Penting untuk dicatat bahwa semua tugas dievaluasi menggunakan metode 0-shot, kecuali untuk BBH dan MMLU yang menggunakan 3-shot CoT dan 5-shot, masing-masing.
+
+<Screenshot src={PHI2} alt="Kinerja & Tolok Ukur LLM Phi-2" />
+
+Meskipun model ini tidak diselaraskan dengan teknik khusus seperti RLHF, dilaporkan bahwa model ini lebih aman dalam hal toksisitas dan bias dibandingkan dengan Llama2-7b yang open-source dan telah diselaraskan. Para penulis mengatribusikan hal ini pada upaya kurasi data yang dilakukan.
+
+<Screenshot src={PHI2SAFETY} alt="Kinerja Keamanan Phi-2" />
+
+Seperti yang ditunjukkan pada gambar di bawah ini, Phi-2 mengungguli Mistral 7B dan Llama 2 (13B) dalam berbagai tolok ukur. Phi-2 bahkan mengungguli model Llama-2-70B dalam hal penalaran multi-langkah. Phi-2 juga mengungguli [Google's Gemini Nano 2](https://www.promptingguide.ai/models/gemini).
+
+<Screenshot src={PHI2PERFORMANCE} alt="Perbandingan Kinerja Phi-2" />
+
+Di bawah ini, kami memberikan beberapa contoh prompt yang mendemonstrasikan kemampuan model Phi-2 dalam beberapa tugas.
+
+### Pemecahan Masalah Fisika
+
+Contoh di bawah ini menunjukkan kemampuan Phi-2 dalam memecahkan soal cerita fisika:
+
+<Screenshot src={PHI2PHYSICS} alt="Pemecahan Masalah Fisika oleh Phi-2" />
+
+### Identifikasi Kesalahan
+
+Contoh di bawah ini menunjukkan kemampuan Phi-2 dalam mengidentifikasi kesalahan dalam perhitungan seorang siswa untuk soal cerita fisika:
+
+<Screenshot src={PHI2CORRECTING} alt="Verifikasi dan Koreksi oleh Phi-2" />
+
+## Penggunaan Phi-2
+Menurut [halaman model](https://huggingface.co/microsoft/phi-2), Phi-2 dapat digunakan dengan format QA (Tanya Jawab), format chat, dan format kode. Di bawah ini kami mendemonstrasikan cara menggunakan template prompt ini secara efektif dalam berbagai skenario.
+
+### Format QA
+Format QA berguna untuk skenario di mana Anda mengajukan pertanyaan kepada model dan menginginkan jawaban yang ringkas.
+
+Anda dapat menggunakan template prompt berikut:
+
+```markdown
+Instruksi: {{prompt}}
+Keluaran:
+```
+
+Berikut adalah contohnya:
+
+*Prompt:*
+```
+Instruksi: Apa perbedaan antara data dan informasi?
+Keluaran:
+```
+
+*Keluaran:*
+```
+Pertanyaan bagus! Data merujuk pada fakta mentah, statistik, atau angka yang belum dianalisis atau diproses menjadi konteks yang bermakna. Di sisi lain, informasi adalah data yang telah diorganisir, dianalisis, dan diinterpretasikan sehingga dapat digunakan oleh manusia untuk membuat keputusan atau mengambil tindakan. Dengan kata lain, data adalah bahan mentah, sedangkan informasi adalah pengetahuan yang telah diproses dan berguna.
+```
+
+### Format Chat
+Format chat yang digunakan oleh Phi-2 adalah format standar dan berikut adalah contoh sederhana:
+
+*Prompt:*
+```
+Manusia: Halo, siapa kamu?
+AI: Salam! Saya adalah asisten penelitian AI. Bagaimana saya bisa membantu Anda hari ini?
+Manusia: Bisakah kamu ceritakan tentang pembentukan lubang hitam?
+AI:
+```
+
+*Keluaran:*
+```
+Lubang hitam terbentuk ketika bintang yang sangat besar kehabisan bahan bakar dan runtuh karena tarikan gravitasinya sendiri. Objek yang dihasilkan sangat padat sehingga mendistorsi ruang-waktu di sekitarnya, menyebabkan apa pun yang terlalu dekat akan ditarik oleh gravitasi yang sangat kuat. Ini termasuk cahaya, yang tidak dapat...
+```
+
+### Format Kode
+Berikut adalah template prompt pembuatan kode yang memberikan nama fungsi kepada model:
+
+*Prompt:*
+```
+def perkalian(a,b):\n
+```
+
+Perlu diingat bahwa model ini telah dilatih dengan contoh kode Python dan pustaka yang terbatas, sehingga kemampuan pembuatan kode dan dukungan bahasanya cukup terbatas.
+
+## Batasan Phi-2
+Berikut adalah ringkasan batasan Phi-2, seperti yang dilaporkan oleh para penulis:
+
+- Seperti model lainnya, Phi-2 mungkin menghasilkan kode dan pernyataan yang tidak akurat.
+- Phi-2 tidak dilatih dengan instruksi seperti model lain dan mungkin kesulitan mengikuti instruksi.
+- Pelatihan terdiri dari bahasa Inggris standar; oleh karena itu, model mungkin kesulitan memahami bahasa gaul dan gagal memahami instruksi dari bahasa lain.
+- Phi-2 juga mungkin menghasilkan bias sosial dan konten beracun.
+- Phi-2 tidak disetel dan cenderung menghasilkan respons yang bertele-tele, terkadang bahkan menghasilkan teks tambahan yang tidak relevan. Para penulis menyarankan bahwa ini mungkin disebabkan oleh sifat dataset pelatihan yang terutama terdiri dari buku teks.
+
+*Sumber Gambar: [Microsoft Research](https://www.microsoft.com/en-us/research/blog/phi-2-the-surprising-power-of-small-language-models/)*
+
+## Referensi
+- [Textbooks Are All You Need](https://arxiv.org/abs/2306.11644)
+- [Phi-1.5](https://arxiv.org/abs/2309.05463)

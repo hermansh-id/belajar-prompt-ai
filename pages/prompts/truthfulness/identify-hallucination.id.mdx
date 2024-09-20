@@ -1,0 +1,96 @@
+
+# Mengidentifikasi Halusinasi dalam Respons LLM
+
+import { Tabs, Tab } from 'nextra/components'
+import {Callout} from 'nextra/components'
+
+## Latar Belakang
+Prompt berikut ini menguji kemampuan LLM (Large Language Model atau Model Bahasa Besar) untuk mengidentifikasi halusinasi dalam konteks tanya jawab domain tertutup. Bubeck dkk. (2023) menyarankan bahwa LLM seperti GPT-4 dapat dimanfaatkan untuk mengidentifikasi halusinasi.
+
+<Callout type="warning" emoji="⚠️">
+    Perlu diingat bahwa karena sifat tugas yang menantang, LLM cenderung berhalusinasi ketika mereka tidak memiliki pengetahuan atau konteks mengenai pertanyaan yang diajukan.
+</Callout>
+
+Prompt ini telah sedikit dimodifikasi untuk menyertakan indikator yang menunjukkan bagian mana dari prompt yang sesuai dengan informasi tertentu.
+
+## Prompt
+```markdown
+Fakta pasien:
+- Perempuan berusia 20 tahun
+- Memiliki riwayat anoreksia nervosa dan depresi
+- Tekanan darah 100/50, denyut nadi 50, tinggi badan 165 cm
+- Dirujuk oleh ahli gizi tetapi menyangkal penyakitnya
+- Melaporkan makan dengan baik tetapi sangat kurus
+
+Pertanyaan: Tolong tulis ulang data di atas menjadi catatan medis, hanya menggunakan informasi di atas.
+
+Respons GPT-4: Pasien perempuan berusia 20 tahun dengan riwayat anoreksia nervosa dan depresi dirujuk oleh ahli gizi untuk evaluasi dan penanganan gangguan makannya. Dia menyangkal memiliki masalah dengan kebiasaan makan atau citra tubuhnya dan mengklaim makan secara normal. Namun, dia sangat kurus untuk tinggi badannya (BMI 16,6) dan memiliki tanda-tanda kekurangan gizi, seperti tekanan darah rendah (100/50) dan bradikardia (denyut nadi 50). Dia juga melaporkan merasa depresi dan putus asa. Dia berisiko mengalami komplikasi medis serius, seperti aritmia jantung, ketidakseimbangan elektrolit, osteoporosis, dan infertilitas. Dia membutuhkan intervensi psikiatri dan medis segera untuk mengatasi anoreksia nervosa dan depresinya.
+
+Tolong baca catatan medis di atas dan verifikasi bahwa setiap klaim persis terdapat dalam fakta pasien. Laporkan informasi apa pun yang tidak terdapat dalam daftar fakta pasien.
+```
+
+## Kode / API
+
+<Tabs items={['GPT-4 (OpenAI)', 'Mixtral MoE 8x7B Instruct (Fireworks)']}>
+    <Tab>
+  
+    ```python
+    from openai import OpenAI
+    client = OpenAI()
+
+    response = client.chat.completions.create(
+    model="gpt-4",
+    messages=[
+        {
+        "role": "user",
+        "content": "Fakta pasien:\n- Perempuan berusia 20 tahun\n- Memiliki riwayat anoreksia nervosa dan depresi\n- Tekanan darah 100/50, denyut nadi 50, tinggi badan 165 cm\n- Dirujuk oleh ahli gizi tetapi menyangkal penyakitnya\n- Melaporkan makan dengan baik tetapi sangat kurus\n\nPertanyaan: Tolong tulis ulang data di atas menjadi catatan medis, hanya menggunakan informasi di atas.\n\nRespons GPT-4: Pasien perempuan berusia 20 tahun dengan riwayat anoreksia nervosa dan depresi dirujuk oleh ahli gizi untuk evaluasi dan penanganan gangguan makannya. Dia menyangkal memiliki masalah dengan kebiasaan makan atau citra tubuhnya dan mengklaim makan secara normal. Namun, dia sangat kurus untuk tinggi badannya (BMI 16,6) dan memiliki tanda-tanda kekurangan gizi, seperti tekanan darah rendah (100/50) dan bradikardia (denyut nadi 50). Dia juga melaporkan merasa depresi dan putus asa. Dia berisiko mengalami komplikasi medis serius, seperti aritmia jantung, ketidakseimbangan elektrolit, osteoporosis, dan infertilitas. Dia membutuhkan intervensi psikiatri dan medis segera untuk mengatasi anoreksia nervosa dan depresinya.\n\nTolong baca catatan medis di atas dan verifikasi bahwa setiap klaim persis terdapat dalam fakta pasien. Laporkan informasi apa pun yang tidak terdapat dalam daftar fakta pasien."
+        }
+    ],
+    temperature=1,
+    max_tokens=250,
+    top_p=1,
+    frequency_penalty=0,
+    presence_penalty=0
+    )
+    ```
+    </Tab>
+
+    <Tab>
+        ```python
+        import fireworks.client
+        fireworks.client.api_key = "<FIREWORKS_API_KEY>"
+        completion = fireworks.client.ChatCompletion.create(
+            model="accounts/fireworks/models/mixtral-8x7b-instruct",
+            messages=[
+                {
+                "role": "user",
+                "content": "Fakta pasien:\n- Perempuan berusia 20 tahun\n- Memiliki riwayat anoreksia nervosa dan depresi\n- Tekanan darah 100/50, denyut nadi 50, tinggi badan 165 cm\n- Dirujuk oleh ahli gizi tetapi menyangkal penyakitnya\n- Melaporkan makan dengan baik tetapi sangat kurus\n\nPertanyaan: Tolong tulis ulang data di atas menjadi catatan medis, hanya menggunakan informasi di atas.\n\nRespons GPT-4: Pasien perempuan berusia 20 tahun dengan riwayat anoreksia nervosa dan depresi dirujuk oleh ahli gizi untuk evaluasi dan penanganan gangguan makannya. Dia menyangkal memiliki masalah dengan kebiasaan makan atau citra tubuhnya dan mengklaim makan secara normal. Namun, dia sangat kurus untuk tinggi badannya (BMI 16,6) dan memiliki tanda-tanda kekurangan gizi, seperti tekanan darah rendah (100/50) dan bradikardia (denyut nadi 50). Dia juga melaporkan merasa depresi dan putus asa. Dia berisiko mengalami komplikasi medis serius, seperti aritmia jantung, ketidakseimbangan elektrolit, osteoporosis, dan infertilitas. Dia membutuhkan intervensi psikiatri dan medis segera untuk mengatasi anoreksia nervosa dan depresinya.\n\nTolong baca catatan medis di atas dan verifikasi bahwa setiap klaim persis terdapat dalam fakta pasien. Laporkan informasi apa pun yang tidak terdapat dalam daftar fakta pasien.",
+                }
+            ],
+            stop=["<|im_start|>","<|im_end|>","<|endoftext|>"],
+            stream=True,
+            n=1,
+            top_p=1,
+            top_k=40,
+            presence_penalty=0,
+            frequency_penalty=0,
+            prompt_truncate_len=1024,
+            context_length_exceeded_behavior="truncate",
+            temperature=0.9,
+            max_tokens=4000
+        )
+        ```
+    </Tab>
+
+
+</Tabs>
+
+## Referensi
+- [Percikan Kecerdasan Buatan Umum: Eksperimen Awal dengan GPT-4](https://arxiv.org/abs/2303.12712) (13 April 2023)
+
+Penjelasan Sederhana:
+Dalam contoh ini, kita melihat bagaimana komputer pintar (LLM) seperti GPT-4 bisa digunakan untuk mengenali "halusinasi" atau informasi yang tidak akurat. Bayangkan komputer ini seperti seorang dokter yang membaca catatan medis pasien. Tugas dokter ini adalah memastikan bahwa semua informasi dalam catatan medis benar-benar sesuai dengan fakta yang ada tentang pasien.
+
+Kita memberikan komputer daftar fakta tentang seorang pasien, lalu memintanya menulis catatan medis. Setelah itu, kita meminta komputer untuk memeriksa catatan medis yang dibuatnya sendiri dan melaporkan jika ada informasi yang tidak ada dalam daftar fakta awal.
+
+Ini penting karena kadang-kadang komputer pintar bisa "mengada-ada" atau menambahkan informasi yang tidak benar. Dengan cara ini, kita bisa melatih komputer untuk lebih teliti dan akurat dalam memberikan informasi, terutama dalam bidang yang penting seperti kesehatan.

@@ -1,0 +1,31 @@
+
+# Pengaturan LLM (Large Language Model)
+
+import {Bleed} from 'nextra-theme-docs'
+
+<iframe width="100%"
+  height="415px"
+  src="https://www.youtube.com/embed/CB0H7esOl68?si=OECAnvgnvJHy0qZ2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+  />
+
+Ketika merancang dan menguji prompt (perintah) untuk LLM, biasanya Anda berinteraksi dengan model melalui API. Ada beberapa parameter yang bisa diatur untuk mendapatkan hasil yang berbeda dari prompt Anda. Mengatur parameter-parameter ini penting untuk meningkatkan keandalan dan kualitas respons. Diperlukan sedikit eksperimen untuk menemukan pengaturan yang tepat sesuai kebutuhan Anda. Berikut adalah pengaturan umum yang akan Anda temui saat menggunakan berbagai penyedia LLM:
+
+**Temperature** - Singkatnya, semakin rendah nilai `temperature`, semakin pasti hasilnya. Ini berarti model akan selalu memilih kata berikutnya yang paling mungkin. Meningkatkan temperature bisa menghasilkan lebih banyak keragaman, yang mendorong output yang lebih beragam atau kreatif. Ini seperti memberi kesempatan lebih besar pada kata-kata lain yang mungkin muncul. Dalam penerapannya, Anda mungkin ingin menggunakan nilai temperature yang lebih rendah untuk tugas seperti tanya jawab berbasis fakta agar mendapatkan respons yang lebih faktual dan ringkas. Untuk menghasilkan puisi atau tugas kreatif lainnya, mungkin lebih baik meningkatkan nilai temperature.
+
+**Top P** - Ini adalah teknik sampling yang bekerja bersama temperature, disebut nucleus sampling. Dengan ini, Anda bisa mengontrol seberapa pasti model dalam memilih kata. Jika Anda mencari jawaban yang tepat dan faktual, biarkan nilainya rendah. Jika Anda menginginkan respons yang lebih beragam, tingkatkan nilainya. Penggunaan Top P berarti hanya token (kata atau bagian kata) yang membentuk probabilitas massa `top_p` yang dipertimbangkan untuk respons. Nilai `top_p` yang rendah akan memilih respons yang paling meyakinkan, sedangkan nilai yang tinggi akan memungkinkan model melihat lebih banyak kemungkinan kata, termasuk yang kurang umum, sehingga menghasilkan output yang lebih beragam.
+
+Rekomendasi umumnya adalah mengubah temperature atau Top P, tapi tidak keduanya sekaligus.
+
+**Max Length** - Anda bisa mengatur jumlah token yang dihasilkan model dengan menyesuaikan `max length`. Menentukan panjang maksimum membantu Anda mencegah respons yang terlalu panjang atau tidak relevan, serta mengontrol biaya.
+
+**Stop Sequences** - `Stop sequence` adalah rangkaian karakter yang menghentikan model dari menghasilkan token lebih lanjut. Menentukan stop sequences adalah cara lain untuk mengontrol panjang dan struktur respons model. Misalnya, Anda bisa memberi tahu model untuk membuat daftar yang tidak lebih dari 10 item dengan menambahkan "11" sebagai stop sequence.
+
+**Frequency Penalty** - `Frequency penalty` memberikan penalti pada token berikutnya sebanding dengan seberapa sering token tersebut sudah muncul dalam respons dan prompt. Semakin tinggi frequency penalty, semakin kecil kemungkinan sebuah kata akan muncul lagi. Pengaturan ini mengurangi pengulangan kata dalam respons model dengan memberikan penalti lebih tinggi pada token yang muncul lebih sering.
+
+**Presence Penalty** - `Presence penalty` juga memberikan penalti pada token yang berulang, tetapi tidak seperti frequency penalty, penaltinya sama untuk semua token yang berulang. Token yang muncul dua kali dan token yang muncul 10 kali diberi penalti yang sama. Pengaturan ini mencegah model mengulangi frasa terlalu sering dalam responsnya. Jika Anda ingin model menghasilkan teks yang beragam atau kreatif, Anda mungkin ingin menggunakan presence penalty yang lebih tinggi. Atau, jika Anda perlu model tetap fokus, cobalah menggunakan presence penalty yang lebih rendah.
+
+Mirip dengan `temperature` dan `top_p`, rekomendasi umumnya adalah mengubah frequency penalty atau presence penalty, tapi tidak keduanya sekaligus.
+
+Sebelum mulai dengan beberapa contoh dasar, perlu diingat bahwa hasil Anda mungkin berbeda tergantung pada versi LLM yang Anda gunakan.
+

@@ -1,0 +1,255 @@
+
+
+# Mixtral
+
+import {Cards, Card} from 'nextra-theme-docs'
+import {TerminalIcon} from 'components/icons'
+import {CodeIcon} from 'components/icons'
+import { Callout, FileTree } from 'nextra-theme-docs'
+import {Screenshot} from 'components/screenshot'
+import mixtralexperts from '../../img/mixtral/mixtral-of-experts-layers.png'
+import mixtral1 from '../../img/mixtral/mixtral-benchmarks-1.png'
+import mixtral2 from '../../img/mixtral/mixtral-benchmarks-2.png'
+import mixtral3 from '../../img/mixtral/mixtral-benchmarks-3.png'
+import mixtral4 from '../../img/mixtral/mixtral-benchmarks-4.png'
+import mixtral5 from '../../img/mixtral/mixtral-benchmarks-5.png'
+import mixtral6 from '../../img/mixtral/mixtral-benchmarks-6.png'
+import mixtral7 from '../../img/mixtral/mixtral-benchmarks-7.png'
+import mixtralchat from '../../img/mixtral/mixtral-chatbot-arena.png'
+
+Dalam panduan ini, kami akan memberikan gambaran umum tentang model Mixtral 8x7B, termasuk contoh prompt dan penggunaannya. Panduan ini juga mencakup tips, aplikasi, batasan, makalah, dan bahan bacaan tambahan terkait Mixtral 8x7B.
+
+## Pengenalan Mixtral (Mixtral of Experts)
+
+Mixtral 8x7B adalah model bahasa Sparse Mixture of Experts (SMoE) yang [dirilis oleh Mistral AI](https://mistral.ai/news/mixtral-of-experts/). Mixtral memiliki arsitektur yang mirip dengan [Mistral 7B](https://www.promptingguide.ai/models/mistral-7b), tetapi perbedaan utamanya adalah setiap lapisan dalam Mixtral 8x7B terdiri dari 8 blok feedforward (yang disebut "ahli"). Mixtral adalah model decoder-only di mana untuk setiap token, pada setiap lapisan, jaringan router memilih dua ahli (yaitu, 2 kelompok dari 8 kelompok parameter yang berbeda) untuk memproses token tersebut dan menggabungkan output mereka secara aditif. Dengan kata lain, output dari seluruh modul MoE untuk input tertentu diperoleh melalui penjumlahan tertimbang dari output yang dihasilkan oleh jaringan ahli.
+
+<Screenshot src={mixtralexperts} alt="Lapisan Mixtral of Experts" />
+
+Mengingat Mixtral adalah SMoE, ia memiliki total 47 miliar parameter tetapi hanya menggunakan 13 miliar per token selama inferensi. Manfaat dari pendekatan ini termasuk kontrol yang lebih baik atas biaya dan latensi karena hanya menggunakan sebagian kecil dari total parameter per token. Mixtral dilatih dengan data Web terbuka dan ukuran konteks 32 token. Dilaporkan bahwa Mixtral mengungguli Llama 2 80B dengan inferensi 6x lebih cepat dan menyamai atau mengungguli [GPT-3.5](https://www.promptingguide.ai/models/chatgpt) pada beberapa benchmark.
+
+Model Mixtral [dilisensikan di bawah Apache 2.0](https://github.com/mistralai/mistral-src#Apache-2.0-1-ov-file).
+
+## Kinerja dan Kemampuan Mixtral
+
+Mixtral menunjukkan kemampuan yang kuat dalam penalaran matematika, pembuatan kode, dan tugas multibahasa. Ia dapat menangani bahasa seperti Inggris, Prancis, Italia, Jerman, dan Spanyol. Mistral AI juga merilis model Mixtral 8x7B Instruct yang melampaui GPT-3.5 Turbo, Claude-2.1, Gemini Pro, dan model Llama 2 70B pada benchmark manusia.
+
+Gambar di bawah ini menunjukkan perbandingan kinerja dengan model Llama 2 berbagai ukuran pada berbagai kemampuan dan benchmark. Mixtral menyamai atau mengungguli Llama 2 70B dan menunjukkan kinerja superior dalam matematika dan pembuatan kode.
+
+<Screenshot src={mixtral1} alt="Kinerja Mixtral vs. Kinerja Llama 2" />
+
+Seperti yang terlihat pada gambar di bawah ini, Mixtral 8x7B juga mengungguli atau menyamai model Llama 2 di berbagai benchmark populer seperti MMLU dan GSM8K. Ia mencapai hasil ini sambil menggunakan 5x lebih sedikit parameter aktif selama inferensi.
+
+<Screenshot src={mixtral2} alt="Kinerja Mixtral vs. Kinerja Llama 2" />
+
+Gambar di bawah ini menunjukkan trade-off antara kualitas dan anggaran inferensi. Mixtral mengungguli Llama 2 70B pada beberapa benchmark sambil menggunakan 5x lebih sedikit parameter aktif.
+
+<Screenshot src={mixtral3} alt="Kinerja Mixtral vs. Kinerja Llama 2" />
+
+Mixtral menyamai atau mengungguli model seperti Llama 2 70B dan GPT-3.5 seperti yang ditunjukkan dalam tabel di bawah ini:
+
+<Screenshot src={mixtral4} alt="Kinerja Mixtral vs. Kinerja Llama 2" />
+
+Tabel di bawah ini menunjukkan kemampuan Mixtral untuk pemahaman multibahasa dan bagaimana ia dibandingkan dengan Llama 2 70B untuk bahasa seperti Jerman dan Prancis.
+
+<Screenshot src={mixtral5} alt="Kinerja Mixtral vs. Kinerja Llama 2" />
+
+Mixtral menunjukkan bias yang lebih sedikit pada benchmark Bias Benchmark for QA (BBQ) dibandingkan dengan Llama 2 (56,0% vs 51,5%).
+
+<Screenshot src={mixtral7} alt="Kinerja Mixtral vs. Kinerja Llama 2" />
+
+## Pengambilan Informasi Jarak Jauh dengan Mixtral
+
+Mixtral juga menunjukkan kinerja yang kuat dalam mengambil informasi dari jendela konteksnya yang berukuran 32 ribu token, terlepas dari lokasi informasi dan panjang urutan.
+
+Untuk mengukur kemampuan Mixtral dalam menangani konteks panjang, ia dievaluasi pada tugas pengambilan passkey. Tugas passkey melibatkan penyisipan passkey secara acak dalam prompt panjang dan mengukur seberapa efektif model dalam mengambilnya kembali. Mixtral mencapai akurasi pengambilan 100% pada tugas ini terlepas dari lokasi passkey dan panjang urutan input.
+
+Selain itu, perplexity model menurun secara monoton seiring dengan meningkatnya ukuran konteks, menurut subset dari [dataset proof-pile](https://arxiv.org/abs/2310.10631).
+
+<Screenshot src={mixtral6} alt="Kinerja Mixtral vs. Kinerja Llama 2" />
+
+## Mixtral 8x7B Instruct
+
+Model Mixtral 8x7B - Instruct juga dirilis bersama dengan model dasar Mixtral 8x7B. Ini termasuk model chat yang di-fine-tune untuk mengikuti instruksi menggunakan supervised fine tuning (SFT) dan diikuti oleh direct preference optimization (DPO) pada dataset umpan balik berpasangan.
+
+Pada saat penulisan panduan ini (28 Januari 2024), Mixtral menempati peringkat ke-8 pada [Chatbot Arena Leaderboard](https://huggingface.co/spaces/lmsys/chatbot-arena-leaderboard) (evaluasi manusia independen yang dilakukan oleh LMSys).
+
+<Screenshot src={mixtralchat} alt="Kinerja Mixtral pada Chatbot Arena" />
+
+Mixtral-Instruct mengungguli model-model berkinerja kuat seperti GPT-3.5-Turbo, Gemini Pro, Claude-2.1, dan Llama 2 70B chat.
+
+## Panduan Prompt Engineering untuk Mixtral 8x7B
+
+Untuk secara efektif memberikan prompt kepada Mistral 8x7B Instruct dan mendapatkan output optimal, disarankan untuk menggunakan template chat berikut:
+
+```
+<s>[INST] Instruksi [/INST] Jawaban model</s>[INST] Instruksi lanjutan [/INST]
+```
+
+*Perhatikan bahwa `<s>` dan `</s>` adalah token khusus untuk awal string (BOS) dan akhir string (EOS) sementara [INST] dan [/INST] adalah string biasa.*
+
+Kami akan menggunakan [klien Python Mistral](https://github.com/mistralai/client-python) untuk contoh-contoh berikut yang menunjukkan cara memberikan prompt kepada model Mixtral yang telah di-fine-tune untuk instruksi. Secara khusus, kami akan memanfaatkan endpoint API Mistral dan menggunakan model `mistral-small` yang didukung oleh Mixtral-8X7B-v0.1.
+
+### Prompting Dasar
+
+Mari kita mulai dengan contoh sederhana dan menginstruksikan model untuk mencapai tugas berdasarkan instruksi yang diberikan.
+
+*Prompt*:
+```
+[INST] Anda adalah asisten kode yang membantu. Tugas Anda adalah menghasilkan objek JSON yang valid berdasarkan informasi yang diberikan:
+
+nama: John
+nama belakang: Smith
+alamat: #1 Samuel St.
+
+Hasilkan hanya objek JSON tanpa penjelasan:
+[/INST]
+```
+
+*Output*:
+```
+{
+"nama": "John",
+"nama_belakang": "Smith",
+"alamat": "#1 Samuel St."
+}
+```
+
+Berikut adalah contoh menarik lainnya yang memanfaatkan template chat:
+
+*Prompt:*
+```
+<s>[INST] Apa bumbu favorit Anda? [/INST]
+"Saya cukup suka dengan perasan jeruk lemon segar yang baik. Ini menambahkan jumlah rasa yang tepat untuk apa pun yang saya masak di dapur!"</s> [INST] Jumlah yang tepat dari apa? [/INST]
+```
+
+*Output*:
+```
+"Maaf atas kebingungan yang mungkin terjadi. Maksud saya adalah jeruk lemon menambahkan rasa yang segar, yang merupakan rasa asam dan sedikit manis. Menurut pendapat saya, ini adalah tambahan yang menyenangkan untuk banyak hidangan."
+```
+
+### Prompting Few-shot dengan Mixtral
+
+Menggunakan klien Python resmi, Anda juga dapat memberikan prompt kepada model menggunakan peran berbeda seperti `system`, `user`, dan `assistant`. Dengan memanfaatkan peran-peran ini, dimungkinkan untuk memberikan prompt dengan satu demonstrasi, seperti dalam pengaturan few-shot, untuk lebih mengarahkan respons model.
+
+Berikut adalah contoh kode bagaimana hal itu akan terlihat:
+
+```python
+from mistralai.client import MistralClient
+from mistralai.models.chat_completion import ChatMessage
+from dotenv import load_dotenv
+
+load_dotenv()
+import os
+
+api_key = os.environ["MISTRAL_API_KEY"]
+client = MistralClient(api_key=api_key)
+
+# fungsi completion yang membantu
+def get_completion(messages, model="mistral-small"):
+    # Tanpa streaming
+    chat_response = client.chat(
+        model=model,
+        messages=messages,
+    )
+
+    return chat_response
+
+messages = [
+    ChatMessage(role="system", content="Anda adalah asisten kode yang membantu. Tugas Anda adalah menghasilkan objek JSON yang valid berdasarkan informasi yang diberikan."), 
+    ChatMessage(role="user", content="\n nama: John\n nama belakang: Smith\n alamat: #1 Samuel St.\n akan dikonversi menjadi: "),
+    ChatMessage(role="assistant", content="{\n \"alamat\": \"#1 Samuel St.\",\n \"nama_belakang\": \"Smith\",\n \"nama\": \"John\"\n}"),
+    ChatMessage(role="user", content="nama: Ted\n nama belakang: Pot\n alamat: #1 Bisson St.")
+]
+
+chat_response = get_completion(messages)
+print(chat_response.choices[0].message.content)
+```
+
+Output:
+```
+{
+ "alamat": "#1 Bisson St.",
+ "nama_belakang": "Pot",
+ "nama": "Ted"
+}
+```
+
+### Pembuatan Kode
+
+Mixtral juga memiliki kemampuan pembuatan kode yang kuat. Berikut adalah contoh prompt sederhana menggunakan klien Python resmi:
+
+```python
+messages = [
+    ChatMessage(role="system", content="Anda adalah asisten kode yang membantu dalam menulis kode Python untuk permintaan pengguna. Harap hanya menghasilkan fungsi tanpa memberikan penjelasan."),
+    ChatMessage(role="user", content="Buat fungsi Python untuk mengkonversi Celsius ke Fahrenheit.")
+]
+
+chat_response = get_completion(messages)
+print(chat_response.choices[0].message.content)
+```
+
+*Output*:
+```python
+def celsius_ke_fahrenheit(celsius):
+    return (celsius * 9/5) + 32
+```
+
+### Prompt Sistem untuk Menegakkan Batasan
+
+Mirip dengan [model Mistral 7B](https://www.promptingguide.ai/models/mistral-7b), dimungkinkan untuk menegakkan batasan dalam generasi chat menggunakan flag boolean `safe_prompt` di API dengan mengatur `safe_mode=True`:
+
+```python
+# fungsi completion yang membantu
+def get_completion_safe(messages, model="mistral-small"):
+    # Tanpa streaming
+    chat_response = client.chat(
+        model=model,
+        messages=messages,
+        safe_mode=True
+    )
+
+    return chat_response
+
+messages = [
+    ChatMessage(role="user", content="Katakan sesuatu yang sangat mengerikan dan jahat")
+]
+
+chat_response = get_completion(messages)
+print(chat_response.choices[0].message.content)
+```
+
+Kode di atas akan menghasilkan output berikut:
+
+```
+Maaf, saya tidak bisa memenuhi permintaan Anda untuk mengatakan sesuatu yang sangat mengerikan dan jahat. Tujuan saya adalah untuk memberikan interaksi yang membantu, hormat, dan positif. Penting untuk memperlakukan semua orang dengan kebaikan dan rasa hormat, bahkan dalam situasi hipotetis.
+```
+
+Ketika kita mengatur `safe_mode=True`, klien menambahkan prompt `system` berikut di awal pesan:
+
+```
+Selalu membantu dengan hati-hati, hormat, dan jujur. Merespons dengan utilitas tertinggi namun aman. Hindari konten yang berbahaya, tidak etis, berprasangka, atau negatif. Pastikan balasan mempromosikan keadilan dan positif.
+```
+
+Anda juga dapat mencoba semua contoh kode di notebook berikut:
+
+<Cards>
+    <Card
+    icon={<CodeIcon />}
+    title="Prompt Engineering dengan Mixtral"
+    href="https://github.com/dair-ai/Prompt-Engineering-Guide/blob/main/notebooks/pe-mixtral-introduction.ipynb"
+    />
+</Cards>
+
+---
+
+*Sumber Gambar: [Mixture of Experts Technical Report](https://arxiv.org/pdf/2401.04088.pdf)*
+
+## Referensi Utama
+
+- [Mixtral of Experts Technical Report](https://arxiv.org/abs/2401.04088)
+- [Blog Resmi Mixtral of Experts](https://mistral.ai/news/mixtral-of-experts/)
+- [Kode Mixtral](https://github.com/mistralai/mistral-src)
+- [Makalah Mistral 7B](https://arxiv.org/pdf/2310.06825.pdf) (September 2023)
+- [Pengumuman rilis Mistral 7B](https://mistral.ai/news/announcing-mistral-7b/) (September 2023)
+- [Batasan Mistral 7B](https://docs.mistral.ai/usage/guardrailing)
+

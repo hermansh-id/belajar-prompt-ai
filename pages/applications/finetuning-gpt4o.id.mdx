@@ -1,0 +1,33 @@
+
+# Penyesuaian Model dengan GPT-4o
+
+OpenAI baru-baru ini [mengumumkan](https://openai.com/index/gpt-4o-fine-tuning/) tersedianya fitur penyesuaian (fine-tuning) untuk model terbaru mereka, GPT-4o dan GPT-4o mini. Kemampuan baru ini memungkinkan pengembang untuk menyesuaikan model GPT-4o untuk kebutuhan khusus, meningkatkan kinerja, dan menyesuaikan hasil keluaran.
+
+## Detail dan Biaya Penyesuaian
+
+Pengembang sekarang dapat mengakses titik pemeriksaan (checkpoint) `GPT-4o-2024-08-06` untuk penyesuaian melalui [dasbor penyesuaian](https://platform.openai.com/finetune) khusus. Proses ini memungkinkan penyesuaian struktur respons, nada, dan kepatuhan terhadap instruksi kompleks dan spesifik domain.
+
+Biaya untuk menyesuaikan GPT-4o adalah \$25 per juta token untuk pelatihan dan \$3,75 per juta token masukan serta \$15 per juta token keluaran untuk inferensi. Fitur ini hanya tersedia untuk pengembang pada tingkat penggunaan berbayar.
+
+## Token Pelatihan Gratis untuk Eksperimen
+
+Untuk mendorong eksplorasi fitur baru ini, OpenAI menawarkan promosi terbatas hingga 23 September. Pengembang dapat mengakses 1 juta token pelatihan gratis per hari untuk GPT-4o dan 2 juta token pelatihan gratis per hari untuk GPT-4o mini. Ini memberikan kesempatan baik untuk bereksperimen dan menemukan aplikasi inovatif untuk model yang disesuaikan.
+
+## Contoh Kasus: Klasifikasi Emosi
+
+<iframe width="100%"
+  height="415px"
+  src="https://www.youtube.com/embed/UJ7ry7Qp2Js?si=ZU3K0ZVNfQjnlZgo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+  />
+
+Dalam panduan di atas, kami menunjukkan contoh praktis penyesuaian yang melibatkan pelatihan model untuk klasifikasi emosi. Menggunakan [dataset berformat JSONL](https://github.com/dair-ai/datasets/tree/main/openai) yang berisi sampel teks berlabel dengan emosi yang sesuai, GPT-4o mini dapat disesuaikan untuk mengklasifikasikan teks berdasarkan nada emosional.
+
+Demonstrasi ini menyoroti potensi penyesuaian dalam meningkatkan kinerja model untuk tugas-tugas spesifik, mencapai peningkatan signifikan dalam akurasi dibandingkan dengan model standar.
+
+## Mengakses dan Mengevaluasi Model yang Disesuaikan
+
+Setelah proses penyesuaian selesai, pengembang dapat mengakses dan mengevaluasi model kustom mereka melalui playground OpenAI. Playground ini memungkinkan pengujian interaktif dengan berbagai masukan dan memberikan wawasan tentang kinerja model. Untuk evaluasi yang lebih komprehensif, pengembang dapat mengintegrasikan model yang disesuaikan ke dalam aplikasi mereka melalui API OpenAI dan melakukan pengujian sistematis.
+
+Pengenalan penyesuaian untuk model GPT-4o oleh OpenAI membuka kemungkinan baru bagi pengembang yang ingin memanfaatkan kekuatan LLM (Model Bahasa Besar) untuk tugas-tugas khusus.
+

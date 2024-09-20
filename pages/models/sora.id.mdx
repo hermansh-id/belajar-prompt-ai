@@ -1,0 +1,64 @@
+
+# Sora
+
+import { Bleed } from 'nextra-theme-docs'
+
+OpenAI memperkenalkan Sora, model AI teks-ke-video terbaru mereka. Sora dapat membuat video realistis dan imajinatif berdasarkan instruksi teks, dengan durasi hingga satu menit.
+
+OpenAI menyatakan bahwa visi mereka adalah membangun sistem AI yang memahami dan mensimulasikan dunia fisik dalam gerakan, serta melatih model untuk memecahkan masalah yang membutuhkan interaksi dengan dunia nyata.
+
+## Kemampuan
+
+Sora mampu menghasilkan video berkualitas tinggi yang sesuai dengan permintaan pengguna. Model ini juga dapat membuat adegan kompleks dengan beberapa karakter, berbagai jenis gerakan, dan latar belakang, serta memahami hubungan antar elemen tersebut. Kemampuan lainnya termasuk membuat beberapa shot dalam satu video dengan konsistensi karakter dan gaya visual. Berikut adalah beberapa contoh video yang dihasilkan oleh Sora.
+
+Prompt (Instruksi):
+```
+Seorang wanita bergaya berjalan di jalan Tokyo yang dipenuhi cahaya neon hangat dan papan iklan kota yang beranimasi. Dia mengenakan jaket kulit hitam, gaun merah panjang, dan sepatu bot hitam, serta membawa tas tangan hitam. Dia memakai kacamata hitam dan lipstik merah. Dia berjalan dengan percaya diri dan santai. Jalanan lembab dan memantulkan cahaya, menciptakan efek cermin dari lampu-lampu warna-warni. Banyak pejalan kaki berlalu-lalang.
+```
+
+<iframe
+  src="https://cdn.openai.com/sora/videos/tokyo-walk.mp4"
+  width="100%"
+  height="300px"
+  title="SWR-States"
+/>
+
+Prompt (Instruksi):
+
+```
+Sebuah trailer film yang menampilkan petualangan seorang astronot berusia 30 tahun yang mengenakan helm sepeda motor rajutan wol merah, langit biru, gurun garam, gaya sinematik, diambil dengan film 35mm, warna-warna yang cerah.
+```
+
+<iframe
+  src="https://cdn.openai.com/sora/videos/mitten-astronaut.mp4"
+  width="100%"
+  height="300px"
+  title="SWR-States"
+/>
+
+*Sumber video: https://openai.com/sora*
+
+## Metode
+Sora dilaporkan menggunakan model difusi (teknik untuk menghasilkan gambar atau video secara bertahap) yang dapat menghasilkan video lengkap atau memperpanjang video yang sudah ada. Model ini juga menggunakan arsitektur Transformer (struktur AI yang efektif untuk memproses data berurutan) yang meningkatkan kinerjanya. Video dan gambar direpresentasikan sebagai potongan-potongan, mirip dengan token dalam GPT, menghasilkan sistem pembuatan video terpadu yang memungkinkan durasi, resolusi, dan rasio aspek yang lebih tinggi. Mereka menggunakan teknik "recaptioning" seperti yang digunakan dalam DALL·E 3 agar Sora dapat mengikuti instruksi teks dengan lebih akurat. Sora juga dapat menghasilkan video dari gambar yang diberikan, memungkinkan sistem untuk menganimasikan gambar dengan tepat.
+
+## Keterbatasan dan Keamanan
+
+Keterbatasan Sora yang dilaporkan meliputi simulasi fisika dan kurangnya pemahaman tentang sebab-akibat. Sora terkadang juga salah memahami detail spasial dan peristiwa yang dijelaskan dalam instruksi (misalnya, pergerakan kamera). OpenAI melaporkan bahwa mereka menyediakan Sora untuk tim penguji keamanan dan kreator untuk menilai potensi bahaya dan kemampuannya.
+
+Prompt (Instruksi):
+
+```
+Adegan step-printing (teknik efek visual) seseorang yang berlari, shot film sinematik diambil dengan kamera 35mm.
+```
+
+<iframe
+  src="https://cdn.openai.com/sora/videos/backward-jogger.mp4"
+  width="100%"
+  height="300px"
+  title="SWR-States"
+/>
+
+*Sumber video: https://openai.com/sora*
+
+Temukan lebih banyak contoh video yang dihasilkan oleh model Sora di sini: https://openai.com/sora
+

@@ -1,0 +1,73 @@
+
+# Menjumlahkan Bilangan Ganjil dengan LLM
+
+import { Tabs, Tab } from 'nextra/components'
+
+## Latar Belakang
+Prompt ini menguji kemampuan matematika LLM (Large Language Model atau Model Bahasa Besar) dengan memintanya memeriksa apakah penjumlahan bilangan ganjil menghasilkan bilangan genap. Kita juga akan menggunakan teknik "chain-of-thought prompting" (prompt dengan alur pemikiran) dalam contoh ini.
+
+## Prompt
+
+```markdown
+Bilangan ganjil dalam kelompok ini jika dijumlahkan akan menghasilkan bilangan genap: 15, 32, 5, 13, 82, 7, 1.
+Selesaikan dengan memecah masalah menjadi beberapa langkah. Pertama, identifikasi bilangan ganjil, jumlahkan, dan tunjukkan apakah hasilnya ganjil atau genap.
+```
+
+## Kode / API
+
+<Tabs items={['GPT-4 (OpenAI)', 'Mixtral MoE 8x7B Instruct (Fireworks)']}>
+    <Tab>
+  
+        ```python
+        from openai import OpenAI
+        client = OpenAI()
+
+        response = client.chat.completions.create(
+        model="gpt-4",
+        messages=[
+            {
+            "role": "user",
+            "content": "Bilangan ganjil dalam kelompok ini jika dijumlahkan akan menghasilkan bilangan genap: 15, 32, 5, 13, 82, 7, 1. \nSelesaikan dengan memecah masalah menjadi beberapa langkah. Pertama, identifikasi bilangan ganjil, jumlahkan, dan tunjukkan apakah hasilnya ganjil atau genap."
+            }
+        ],
+        temperature=1,
+        max_tokens=256,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+        )
+        ```
+    </Tab>
+
+    <Tab>
+        ```python
+        import fireworks.client
+        fireworks.client.api_key = "<FIREWORKS_API_KEY>"
+        completion = fireworks.client.ChatCompletion.create(
+            model="accounts/fireworks/models/mixtral-8x7b-instruct",
+            messages=[
+                {
+                "role": "user",
+                "content": "Bilangan ganjil dalam kelompok ini jika dijumlahkan akan menghasilkan bilangan genap: 15, 32, 5, 13, 82, 7, 1. \nSelesaikan dengan memecah masalah menjadi beberapa langkah. Pertama, identifikasi bilangan ganjil, jumlahkan, dan tunjukkan apakah hasilnya ganjil atau genap.",
+                }
+            ],
+            stop=["<|im_start|>","<|im_end|>","<|endoftext|>"],
+            stream=True,
+            n=1,
+            top_p=1,
+            top_k=40,
+            presence_penalty=0,
+            frequency_penalty=0,
+            prompt_truncate_len=1024,
+            context_length_exceeded_behavior="truncate",
+            temperature=0.9,
+            max_tokens=4000
+        )
+        ```
+    </Tab>
+
+
+</Tabs>
+
+## Referensi
+- [Percikan Kecerdasan Buatan Umum: Eksperimen Awal dengan GPT-4](https://www.promptingguide.ai/introduction/examples#reasoning) (13 April 2023)
