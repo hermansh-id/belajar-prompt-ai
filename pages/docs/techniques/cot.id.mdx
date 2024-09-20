@@ -1,0 +1,119 @@
+
+# Prompting dengan Rantai Pemikiran (Chain-of-Thought Prompting)
+
+import { Callout } from 'nextra/components'
+import {Screenshot} from 'components/screenshot'
+import COT from '../../../img/cot.png'
+import ZEROCOT from '../../../img/zero-cot.png'
+import AUTOCOT from '../../../img/auto-cot.png'
+
+## Prompting dengan Rantai Pemikiran (Chain-of-Thought/CoT)
+
+<Screenshot src={COT} alt="COT" />
+
+Sumber Gambar: [Wei et al. (2022)](https://arxiv.org/abs/2201.11903)
+
+Diperkenalkan oleh [Wei et al. (2022)](https://arxiv.org/abs/2201.11903), prompting dengan rantai pemikiran (Chain-of-Thought/CoT) memungkinkan model bahasa untuk melakukan penalaran kompleks melalui langkah-langkah pemikiran menengah. Teknik ini dapat dikombinasikan dengan prompting beberapa contoh (few-shot prompting) untuk mendapatkan hasil yang lebih baik pada tugas-tugas rumit yang memerlukan penalaran sebelum memberikan respons.
+
+Mari kita lihat contoh sederhana:
+
+*Prompt:*
+```
+Angka-angka ganjil dalam kelompok ini jika dijumlahkan menghasilkan angka genap: 4, 8, 9, 15, 12, 2, 1.
+A: Menjumlahkan semua angka ganjil (9, 15, 1) menghasilkan 25. Jawabannya adalah Salah.
+
+Angka-angka ganjil dalam kelompok ini jika dijumlahkan menghasilkan angka genap: 17, 10, 19, 4, 8, 12, 24.
+A: Menjumlahkan semua angka ganjil (17, 19) menghasilkan 36. Jawabannya adalah Benar.
+
+Angka-angka ganjil dalam kelompok ini jika dijumlahkan menghasilkan angka genap: 15, 32, 5, 13, 82, 7, 1. 
+A:
+```
+
+*Output:*
+```
+Menjumlahkan semua angka ganjil (15, 5, 13, 7, 1) menghasilkan 41. Jawabannya adalah Salah.
+```
+
+Luar biasa! Kita bisa melihat hasil yang sempurna ketika kita memberikan langkah-langkah penalaran. Bahkan, kita bisa menyelesaikan tugas ini dengan memberikan lebih sedikit contoh, misalnya hanya satu contoh saja:
+
+*Prompt:*
+```
+Angka-angka ganjil dalam kelompok ini jika dijumlahkan menghasilkan angka genap: 4, 8, 9, 15, 12, 2, 1.
+A: Menjumlahkan semua angka ganjil (9, 15, 1) menghasilkan 25. Jawabannya adalah Salah.
+
+Angka-angka ganjil dalam kelompok ini jika dijumlahkan menghasilkan angka genap: 15, 32, 5, 13, 82, 7, 1. 
+A:
+```
+
+*Output:*
+```
+Menjumlahkan semua angka ganjil (15, 5, 13, 7, 1) menghasilkan 41. Jawabannya adalah Salah.
+```
+
+Perlu diingat bahwa para peneliti menyatakan bahwa ini adalah kemampuan yang muncul pada model bahasa yang cukup besar.
+
+## Prompting CoT Tanpa Contoh (Zero-shot CoT Prompting)
+
+<Screenshot src={ZEROCOT} alt="Zero-shot COT" />
+
+Sumber Gambar: [Kojima et al. (2022)](https://arxiv.org/abs/2205.11916)
+
+Ide baru yang muncul belakangan ini adalah [CoT tanpa contoh](https://arxiv.org/abs/2205.11916) (Kojima et al. 2022) yang pada dasarnya melibatkan penambahan frasa "Mari kita pikirkan langkah demi langkah" pada prompt awal. Mari kita coba sebuah masalah sederhana dan lihat bagaimana model merespons:
+
+*Prompt:*
+```
+Saya pergi ke pasar dan membeli 10 apel. Saya memberikan 2 apel kepada tetangga dan 2 kepada tukang reparasi. Kemudian saya pergi dan membeli 5 apel lagi dan memakan 1. Berapa apel yang tersisa?
+```
+
+*Output:*
+```
+11 apel
+```
+
+Jawabannya salah! Sekarang mari kita coba dengan prompt khusus.
+
+*Prompt:*
+```
+Saya pergi ke pasar dan membeli 10 apel. Saya memberikan 2 apel kepada tetangga dan 2 kepada tukang reparasi. Kemudian saya pergi dan membeli 5 apel lagi dan memakan 1. Berapa apel yang tersisa?
+
+Mari kita pikirkan langkah demi langkah.
+```
+
+*Output:*
+```
+Pertama, Anda mulai dengan 10 apel.
+Anda memberikan 2 apel kepada tetangga dan 2 kepada tukang reparasi, jadi Anda memiliki 6 apel tersisa.
+Kemudian Anda membeli 5 apel lagi, jadi sekarang Anda memiliki 11 apel.
+Akhirnya, Anda memakan 1 apel, jadi Anda akan tersisa dengan 10 apel.
+```
+
+Sungguh mengesankan bahwa prompt sederhana ini efektif untuk tugas ini. Ini sangat berguna ketika Anda tidak memiliki banyak contoh untuk digunakan dalam prompt.
+
+<Callout type= "info" emoji="🎉">
+Kami dengan gembira meluncurkan dua kursus baru tentang rekayasa prompt. Dapatkan akses dengan bergabung ke DAIR.AI Academy kami. [Bergabung sekarang!](https://dair-ai.thinkific.com/)
+
+Gunakan kode PROMPTING20 untuk mendapatkan diskon tambahan 20%.
+
+PENTING: Diskon terbatas untuk 500 siswa pertama.
+
+</Callout>
+
+## Rantai Pemikiran Otomatis (Automatic Chain-of-Thought/Auto-CoT)
+
+Ketika menerapkan prompting rantai pemikiran dengan demonstrasi, prosesnya melibatkan pembuatan contoh yang efektif dan beragam secara manual. Upaya manual ini bisa menghasilkan solusi yang kurang optimal. [Zhang et al. (2022)](https://arxiv.org/abs/2210.03493) mengusulkan pendekatan untuk menghilangkan upaya manual dengan memanfaatkan model bahasa besar (LLM) dengan prompt "Mari kita pikirkan langkah demi langkah" untuk menghasilkan rantai penalaran untuk demonstrasi satu per satu. Proses otomatis ini masih bisa menghasilkan kesalahan dalam rantai yang dihasilkan. Untuk mengurangi efek dari kesalahan tersebut, keberagaman demonstrasi sangat penting. Penelitian ini mengusulkan Auto-CoT, yang mengambil sampel pertanyaan dengan keberagaman dan menghasilkan rantai penalaran untuk membangun demonstrasi.
+
+Auto-CoT terdiri dari dua tahap utama:
+
+- Tahap 1): **pengelompokan pertanyaan**: membagi pertanyaan dari dataset yang diberikan menjadi beberapa kelompok
+- Tahap 2): **pengambilan sampel demonstrasi**: memilih pertanyaan yang representatif dari setiap kelompok dan menghasilkan rantai penalarannya menggunakan CoT Tanpa Contoh dengan heuristik sederhana
+
+Heuristik sederhana bisa berupa panjang pertanyaan (misalnya, 60 token) dan jumlah langkah dalam penalaran (misalnya, 5 langkah penalaran). Ini mendorong model untuk menggunakan demonstrasi yang sederhana dan akurat.
+
+Prosesnya diilustrasikan di bawah ini:
+
+<Screenshot src={AUTOCOT} alt="AUTOCOT" />
+
+Sumber Gambar: [Zhang et al. (2022)](https://arxiv.org/abs/2210.03493)
+
+Kode untuk Auto-CoT tersedia [di sini](https://github.com/amazon-science/auto-cot).
+

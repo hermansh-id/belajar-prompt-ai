@@ -1,0 +1,178 @@
+
+
+# Prompt ReAct
+
+import { Callout, FileTree } from 'nextra-theme-docs'
+import {Screenshot} from 'components/screenshot'
+import REACT from '../../../img/react.png'
+import REACT1 from '../../../img/react/table1.png'
+import REACT2 from '../../../img/react/alfworld.png'
+
+[Yao et al., 2022](https://arxiv.org/abs/2210.03629) memperkenalkan sebuah kerangka kerja bernama ReAct. Dalam kerangka ini, model bahasa besar (LLM) digunakan untuk menghasilkan dua hal: *alur pemikiran* dan *tindakan spesifik* secara berselang-seling.
+
+Menghasilkan alur pemikiran memungkinkan model untuk membuat, melacak, dan memperbarui rencana tindakan, bahkan menangani pengecualian. Langkah tindakan memungkinkan model berinteraksi dengan sumber informasi eksternal, seperti basis pengetahuan atau lingkungan tertentu.
+
+Kerangka ReAct memungkinkan LLM untuk berinteraksi dengan alat eksternal guna mendapatkan informasi tambahan, yang menghasilkan respons yang lebih andal dan faktual.
+
+Hasil penelitian menunjukkan bahwa ReAct dapat mengungguli beberapa metode terkini dalam tugas bahasa dan pengambilan keputusan. ReAct juga meningkatkan interpretabilitas dan kepercayaan manusia terhadap LLM. Secara keseluruhan, pendekatan terbaik menggunakan ReAct dikombinasikan dengan chain-of-thought (CoT), yang memungkinkan penggunaan pengetahuan internal dan informasi eksternal yang diperoleh selama proses penalaran.
+
+## Bagaimana Cara Kerjanya?
+
+ReAct terinspirasi oleh sinergi antara "bertindak" dan "bernalar" yang memungkinkan manusia untuk mempelajari tugas baru dan membuat keputusan atau penalaran.
+
+Prompt chain-of-thought (CoT) telah menunjukkan kemampuan LLM untuk melakukan alur penalaran dalam menghasilkan jawaban untuk pertanyaan yang melibatkan aritmetika dan penalaran akal sehat, serta tugas-tugas lainnya [(Wei et al., 2022)](https://arxiv.org/abs/2201.11903). Namun, keterbatasan akses ke dunia luar atau ketidakmampuan untuk memperbarui pengetahuannya dapat menyebabkan masalah seperti halusinasi fakta dan penyebaran kesalahan.
+
+ReAct adalah paradigma umum yang menggabungkan penalaran dan tindakan dengan LLM. ReAct mendorong LLM untuk menghasilkan alur penalaran verbal dan tindakan untuk suatu tugas. Ini memungkinkan sistem melakukan penalaran dinamis untuk membuat, mempertahankan, dan menyesuaikan rencana tindakan sambil juga memungkinkan interaksi dengan lingkungan eksternal (misalnya, Wikipedia) untuk memasukkan informasi tambahan ke dalam penalaran. Gambar di bawah ini menunjukkan contoh ReAct dan langkah-langkah yang terlibat dalam menjawab pertanyaan.
+
+<Screenshot src={REACT} alt="REACT" />
+Sumber Gambar: [Yao et al., 2022](https://arxiv.org/abs/2210.03629)
+
+Dalam contoh di atas, kita memberikan prompt seperti pertanyaan berikut dari [HotpotQA](https://hotpotqa.github.io/):
+
+```
+Selain Apple Remote, perangkat apa lagi yang dapat mengontrol program yang awalnya dirancang untuk berinteraksi dengan Apple Remote?
+```
+
+Perlu diingat bahwa contoh-contoh dalam konteks juga ditambahkan ke prompt, tetapi kita tidak menyertakannya di sini untuk kesederhanaan. Kita dapat melihat bahwa model menghasilkan *alur penyelesaian tugas* (Thought/Pemikiran, Act/Tindakan). Obs (Observation/Pengamatan) sesuai dengan pengamatan dari lingkungan yang sedang berinteraksi (misalnya, mesin pencari). Intinya, ReAct dapat mengambil informasi untuk mendukung penalaran, sementara penalaran membantu menentukan apa yang harus diambil selanjutnya.
+
+## Prompt ReAct
+Untuk mendemonstrasikan cara kerja prompt ReAct, mari kita ikuti contoh dari makalah tersebut.
+
+Langkah pertama adalah memilih kasus dari set pelatihan (misalnya, HotPotQA) dan menyusun alur ReAct. Ini digunakan sebagai contoh few-shot dalam prompt. Alur terdiri dari beberapa langkah pemikiran-tindakan-pengamatan seperti yang ditunjukkan pada gambar di atas. Pemikiran bebas digunakan untuk mencapai berbagai tugas seperti memecah pertanyaan, mengekstrak informasi, melakukan penalaran akal sehat/aritmetika, memandu perumusan pencarian, dan mensintesis jawaban akhir.
+
+Berikut adalah contoh seperti apa prompt ReAct (diambil dari makalah dan dipersingkat menjadi satu contoh untuk kesederhanaan):
+
+```
+Pertanyaan Berapa kisaran ketinggian untuk area yang mencakup sektor timur dari orogeni Colorado?
+Pemikiran 1 Saya perlu mencari orogeni Colorado, menemukan area yang mencakup sektor timur
+dari orogeni Colorado, kemudian menemukan kisaran ketinggian area tersebut.
+Tindakan 1 Cari[orogeni Colorado]
+Pengamatan 1 Orogeni Colorado adalah episode pembentukan pegunungan (orogeni) di
+Colorado dan daerah sekitarnya.
+Pemikiran 2 Tidak disebutkan tentang sektor timur. Jadi saya perlu mencari sektor timur.
+Tindakan 2 Cari[sektor timur]
+Pengamatan 2 (Hasil 1 / 1) Sektor timur meluas ke Dataran Tinggi dan disebut
+orogeni Dataran Tengah.
+Pemikiran 3 Sektor timur orogeni Colorado meluas ke Dataran Tinggi. Jadi saya
+perlu mencari Dataran Tinggi dan menemukan kisaran ketinggiannya.
+Tindakan 3 Cari[Dataran Tinggi]
+Pengamatan 3 Dataran Tinggi mengacu pada salah satu dari dua wilayah daratan yang berbeda
+Pemikiran 4 Saya perlu mencari Dataran Tinggi (Amerika Serikat).
+Tindakan 4 Cari[Dataran Tinggi (Amerika Serikat)]
+Pengamatan 4 Dataran Tinggi adalah subwilayah dari Great Plains. Dari timur ke barat,
+Dataran Tinggi naik ketinggiannya dari sekitar 1.800 hingga 7.000 kaki (550 hingga 2.130
+m).[3]
+Pemikiran 5 Dataran Tinggi naik ketinggiannya dari sekitar 1.800 hingga 7.000 kaki, jadi jawabannya
+adalah 1.800 hingga 7.000 kaki.
+Tindakan 5 Selesai[1.800 hingga 7.000 kaki]
+...
+```
+
+Perlu diingat bahwa pengaturan prompt yang berbeda digunakan untuk jenis tugas yang berbeda. Untuk tugas di mana penalaran sangat penting (misalnya, HotpotQA), beberapa langkah pemikiran-tindakan-pengamatan digunakan untuk alur penyelesaian tugas. Untuk tugas pengambilan keputusan yang melibatkan banyak langkah tindakan, pemikiran digunakan secara hemat.
+
+## Hasil pada Tugas yang Membutuhkan Pengetahuan Intensif
+
+Makalah ini pertama-tama mengevaluasi ReAct pada tugas penalaran yang membutuhkan pengetahuan intensif seperti menjawab pertanyaan (HotPotQA) dan verifikasi fakta ([Fever](https://fever.ai/resources.html)). PaLM-540B digunakan sebagai model dasar untuk prompting.
+
+<Screenshot src={REACT1} alt="REACT1" />
+Sumber Gambar: [Yao et al., 2022](https://arxiv.org/abs/2210.03629)
+
+Hasil prompting pada HotPotQA dan Fever menggunakan metode prompting yang berbeda menunjukkan bahwa ReAct umumnya berkinerja lebih baik daripada Act (hanya melibatkan tindakan) pada kedua tugas.
+
+Kita juga dapat mengamati bahwa ReAct mengungguli CoT pada Fever dan tertinggal di belakang CoT pada HotpotQA. Analisis kesalahan yang rinci disediakan dalam makalah tersebut. Ringkasannya:
+
+- CoT menderita halusinasi fakta
+- Batasan struktural ReAct mengurangi fleksibilitasnya dalam merumuskan langkah-langkah penalaran
+- ReAct sangat bergantung pada informasi yang diambilnya; hasil pencarian yang tidak informatif mengganggu penalaran model dan menyebabkan kesulitan dalam memulihkan dan merumuskan kembali pemikiran
+
+Metode prompting yang menggabungkan dan mendukung peralihan antara ReAct dan CoT+Self-Consistency umumnya mengungguli semua metode prompting lainnya.
+
+## Hasil pada Tugas Pengambilan Keputusan
+
+Makalah ini juga melaporkan hasil yang menunjukkan kinerja ReAct pada tugas pengambilan keputusan. ReAct dievaluasi pada dua tolok ukur yang disebut [ALFWorld](https://alfworld.github.io/) (permainan berbasis teks) dan [WebShop](https://webshop-pnlp.github.io/) (lingkungan situs web belanja online). Keduanya melibatkan lingkungan kompleks yang memerlukan penalaran untuk bertindak dan mengeksplorasi secara efektif.
+
+Perlu diingat bahwa prompt ReAct dirancang secara berbeda untuk tugas-tugas ini sambil tetap mempertahankan ide inti yang sama yaitu menggabungkan penalaran dan tindakan. Di bawah ini adalah contoh untuk masalah ALFWorld yang melibatkan prompt ReAct.
+
+<Screenshot src={REACT2} alt="REACT2" />
+Sumber Gambar: [Yao et al., 2022](https://arxiv.org/abs/2210.03629)
+
+ReAct mengungguli Act pada ALFWorld dan Webshop. Act, tanpa pemikiran apa pun, gagal untuk memecah tujuan menjadi subtujuan dengan benar. Penalaran tampaknya menguntungkan dalam ReAct untuk jenis tugas ini, tetapi metode berbasis prompting saat ini masih jauh dari kinerja manusia ahli pada tugas-tugas ini.
+
+Lihat makalah untuk hasil yang lebih rinci.
+
+## Penggunaan ReAct dengan LangChain
+
+Berikut adalah contoh tingkat tinggi tentang bagaimana pendekatan prompt ReAct bekerja dalam praktik. Kita akan menggunakan OpenAI untuk LLM dan [LangChain](https://python.langchain.com/en/latest/index.html) karena sudah memiliki fungsionalitas bawaan yang memanfaatkan kerangka ReAct untuk membangun agen yang melakukan tugas dengan menggabungkan kekuatan LLM dan berbagai alat.
+
+Pertama, mari kita instal dan impor pustaka yang diperlukan:
+
+``` python
+%%capture
+# perbarui atau instal pustaka yang diperlukan
+!pip install --upgrade openai
+!pip install --upgrade langchain
+!pip install --upgrade python-dotenv
+!pip install google-search-results
+
+# impor pustaka
+import openai
+import os
+from langchain.llms import OpenAI
+from langchain.agents import load_tools
+from langchain.agents import initialize_agent
+from dotenv import load_dotenv
+load_dotenv()
+
+# muat kunci API; Anda perlu mendapatkannya jika belum memilikinya
+os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
+os.environ["SERPER_API_KEY"] = os.getenv("SERPER_API_KEY")
+
+```
+
+Sekarang kita dapat mengonfigurasi LLM, alat yang akan kita gunakan, dan agen yang memungkinkan kita memanfaatkan kerangka ReAct bersama dengan LLM dan alat. Perhatikan bahwa kita menggunakan API pencarian untuk mencari informasi eksternal dan LLM sebagai alat matematika.
+
+``` python
+llm = OpenAI(model_name="text-davinci-003" ,temperature=0)
+tools = load_tools(["google-serper", "llm-math"], llm=llm)
+agent = initialize_agent(tools, llm, agent="zero-shot-react-description", verbose=True)
+```
+
+Setelah dikonfigurasi, kita sekarang dapat menjalankan agen dengan query/prompt yang diinginkan. Perhatikan bahwa di sini kita tidak diharapkan untuk memberikan contoh few-shot seperti yang dijelaskan dalam makalah.
+
+``` python
+agent.run("Siapa pacar Olivia Wilde? Berapa usia dia saat ini dipangkatkan 0,23?")
+```
+
+Eksekusi rantai terlihat sebagai berikut:
+
+``` yaml
+> Memasuki rantai AgentExecutor baru...
+ Saya perlu mencari tahu siapa pacar Olivia Wilde dan kemudian menghitung usianya dipangkatkan 0,23.
+Tindakan: Cari
+Input Tindakan: "pacar Olivia Wilde"
+Pengamatan: Olivia Wilde mulai berkencan dengan Harry Styles setelah mengakhiri pertunangannya yang bertahun-tahun dengan Jason Sudeikis — lihat timeline hubungan mereka.
+Pemikiran: Saya perlu mencari tahu usia Harry Styles.
+Tindakan: Cari
+Input Tindakan: "usia Harry Styles"
+Pengamatan: 29 tahun
+Pemikiran: Saya perlu menghitung 29 dipangkatkan 0,23.
+Tindakan: Kalkulator
+Input Tindakan: 29^0,23
+Pengamatan: Jawaban: 2,169459462491557
+
+Pemikiran: Sekarang saya tahu jawaban akhirnya.
+Jawaban Akhir: Harry Styles, pacar Olivia Wilde, berusia 29 tahun dan usianya dipangkatkan 0,23 adalah 2,169459462491557.
+
+> Rantai selesai.
+```
+
+Output yang kita dapatkan adalah sebagai berikut:
+
+```
+"Harry Styles, pacar Olivia Wilde, berusia 29 tahun dan usianya dipangkatkan 0,23 adalah 2,169459462491557."
+```
+
+Kami mengadaptasi contoh dari [dokumentasi LangChain](https://python.langchain.com/docs/modules/agents/agent_types/react), jadi kredit diberikan kepada mereka. Kami mendorong pembelajar untuk mengeksplorasi kombinasi alat dan tugas yang berbeda.
+
+Anda dapat menemukan notebook untuk kode ini di sini: https://github.com/dair-ai/Prompt-Engineering-Guide/blob/main/notebooks/react.ipynb
+

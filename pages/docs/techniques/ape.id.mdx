@@ -1,0 +1,31 @@
+
+# Insinyur Prompt Otomatis (APE)
+
+import { Callout, FileTree } from 'nextra-theme-docs'
+import {Screenshot} from 'components/screenshot'
+import APE from '../../../img/APE.png'
+import APECOT from '../../../img/ape-zero-shot-cot.png'
+
+<Screenshot src={APE} alt="APE" />
+Sumber Gambar: [Zhou et al., (2022)](https://arxiv.org/abs/2211.01910)
+
+[Zhou et al., (2022)](https://arxiv.org/abs/2211.01910) mengusulkan Insinyur Prompt Otomatis (APE), sebuah kerangka kerja untuk menghasilkan dan memilih instruksi secara otomatis. Bayangkan APE seperti seorang koki yang mencoba berbagai resep untuk menemukan yang terbaik. Dalam hal ini, "resep" adalah instruksi yang diberikan kepada model bahasa besar (LLM), dan "hidangan terbaik" adalah hasil yang paling akurat.
+
+Langkah pertama melibatkan model bahasa besar (sebagai model inferensi) yang diberikan contoh-contoh output untuk menghasilkan calon instruksi untuk suatu tugas. Ini seperti koki yang mencoba berbagai bahan untuk membuat resep baru. Instruksi-instruksi ini kemudian diuji menggunakan model target, dan instruksi yang paling sesuai dipilih berdasarkan skor evaluasi yang dihitung.
+
+APE menemukan prompt "zero-shot CoT" (Chain of Thought atau Rantai Pemikiran tanpa contoh sebelumnya) yang lebih baik daripada prompt buatan manusia "Mari kita pikirkan langkah demi langkah" ([Kojima et al., 2022](https://arxiv.org/abs/2205.11916)).
+
+Prompt "Mari kita selesaikan ini langkah demi langkah untuk memastikan kita memiliki jawaban yang benar." memunculkan penalaran rantai pemikiran dan meningkatkan kinerja pada benchmark MultiArith dan GSM8K:
+
+<Screenshot src={APECOT} alt="APECOT" />
+Sumber Gambar: [Zhou et al., (2022)](https://arxiv.org/abs/2211.01910)
+
+Penelitian ini menyentuh topik penting terkait rekayasa prompt, yaitu ide untuk mengoptimalkan prompt secara otomatis. Ini seperti menemukan cara terbaik untuk bertanya kepada AI agar mendapatkan jawaban yang paling akurat. Meskipun kita tidak membahas topik ini secara mendalam dalam panduan ini, berikut beberapa makalah kunci jika Anda tertarik dengan topik tersebut:
+
+- [Prompt-OIRL](https://arxiv.org/abs/2309.06553) - mengusulkan penggunaan pembelajaran penguatan terbalik offline untuk menghasilkan prompt yang bergantung pada pertanyaan.
+- [OPRO](https://arxiv.org/abs/2309.03409) - memperkenalkan ide menggunakan LLM untuk mengoptimalkan prompt: membiarkan LLM "Menarik napas dalam-dalam" meningkatkan kinerja pada masalah matematika.
+- [AutoPrompt](https://arxiv.org/abs/2010.15980) - mengusulkan pendekatan untuk membuat prompt secara otomatis untuk berbagai tugas berdasarkan pencarian yang dipandu gradien.
+- [Prefix Tuning](https://arxiv.org/abs/2101.00190) - alternatif ringan untuk fine-tuning yang menambahkan awalan kontinu yang dapat dilatih untuk tugas-tugas NLG (Natural Language Generation).
+- [Prompt Tuning](https://arxiv.org/abs/2104.08691) - mengusulkan mekanisme untuk mempelajari prompt lunak melalui backpropagation (propagasi balik).
+
+Semua metode ini bertujuan untuk menemukan cara terbaik dalam berkomunikasi dengan AI, sehingga kita bisa mendapatkan hasil yang lebih akurat dan efisien.

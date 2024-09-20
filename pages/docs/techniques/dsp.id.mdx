@@ -1,0 +1,21 @@
+
+# Prompt Stimulus Terarah
+
+import { Callout, FileTree } from 'nextra-theme-docs'
+import {Screenshot} from 'components/screenshot'
+import DSP from '../../../img/dsp.jpeg'
+
+[Li dkk., (2023)](https://arxiv.org/abs/2302.11520) mengusulkan teknik prompting baru untuk memandu LLM (Model Bahasa Besar) dengan lebih baik dalam menghasilkan ringkasan yang diinginkan.
+
+Sebuah model kebijakan yang dapat diatur dilatih untuk menghasilkan stimulus atau petunjuk. Kita melihat penggunaan RL (Pembelajaran Penguatan) yang semakin meningkat untuk mengoptimalkan LLM.
+
+Gambar di bawah ini menunjukkan bagaimana Prompt Stimulus Terarah dibandingkan dengan prompting standar. Model kebijakan bisa berukuran kecil dan dioptimalkan untuk menghasilkan petunjuk yang memandu LLM beku yang dianggap sebagai kotak hitam.
+
+<Screenshot src={DSP} alt="DSP" />
+Sumber Gambar: [Li dkk., (2023)](https://arxiv.org/abs/2302.11520)
+
+Bayangkan Prompt Stimulus Terarah seperti seorang pemandu wisata yang membantu turis (LLM) menjelajahi kota baru (tugas). Pemandu ini memberikan petunjuk dan arahan yang membantu turis menemukan tempat-tempat menarik (menghasilkan ringkasan yang diinginkan) dengan lebih efisien.
+
+Dibandingkan dengan prompting standar yang hanya memberikan peta kepada turis, Prompt Stimulus Terarah memberikan panduan yang lebih personal dan terarah. Ini memungkinkan LLM untuk menghasilkan hasil yang lebih akurat dan sesuai dengan yang diinginkan.
+
+Contoh lengkap akan segera hadir!

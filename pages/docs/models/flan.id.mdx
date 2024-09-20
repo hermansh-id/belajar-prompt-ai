@@ -1,0 +1,82 @@
+
+# Meningkatkan Skala Model Bahasa yang Dilatih dengan Instruksi
+
+import {Screenshot} from 'components/screenshot'
+import FLAN1 from '../../../img/flan-1.png'
+import FLAN2 from '../../../img/flan-2.png'
+import FLAN3 from '../../../img/flan-3.png'
+import FLAN4 from '../../../img/flan-4.png'
+import FLAN5 from '../../../img/flan-5.png'
+import FLAN6 from '../../../img/flan-6.png'
+import FLAN7 from '../../../img/flan-7.png'
+import FLAN8 from '../../../img/flan-8.png'
+import FLAN9 from '../../../img/flan-9.png'
+import FLAN10 from '../../../img/flan-10.png'
+import FLAN11 from '../../../img/flan-11.png'
+
+## Apa yang baru?
+
+<Screenshot src={FLAN1} alt="FLAN1" />
+Sumber Gambar: [Meningkatkan Skala Model Bahasa yang Dilatih dengan Instruksi](https://arxiv.org/abs/2210.11416)
+
+Penelitian ini mengkaji manfaat dari meningkatkan skala pelatihan berbasis instruksi dan bagaimana hal ini meningkatkan kinerja berbagai model (seperti PaLM dan T5), metode pemberian petunjuk (zero-shot, few-shot, CoT), dan tolok ukur (MMLU, TyDiQA). Aspek-aspek yang diteliti meliputi: peningkatan jumlah tugas (1.800 tugas), peningkatan ukuran model, dan pelatihan pada data rantai pemikiran (Chain of Thought atau CoT) menggunakan 9 dataset.
+
+**Prosedur pelatihan:**
+- 1.800 tugas dirumuskan sebagai instruksi dan digunakan untuk melatih model
+- Menggunakan metode dengan dan tanpa contoh, serta dengan dan tanpa CoT
+
+Tugas-tugas pelatihan dan tugas yang disisihkan ditunjukkan di bawah ini:
+
+<Screenshot src={FLAN11} alt="FLAN11" />
+
+## Kemampuan & Hasil Utama
+
+- Pelatihan berbasis instruksi berkembang dengan baik seiring bertambahnya jumlah tugas dan ukuran model; ini menunjukkan perlunya peningkatan lebih lanjut dalam jumlah tugas dan ukuran model
+- Menambahkan dataset CoT dalam pelatihan menghasilkan kinerja yang baik pada tugas-tugas penalaran
+- Flan-PaLM memiliki kemampuan multibahasa yang lebih baik; peningkatan 14,9% pada TyDiQA one-shot; peningkatan 8,1% pada penalaran aritmatika dalam bahasa-bahasa yang kurang terwakili
+- Flan-PaLM juga berkinerja baik pada pertanyaan yang membutuhkan jawaban terbuka, yang merupakan indikator baik untuk peningkatan kegunaan
+- Meningkatkan kinerja di berbagai tolok ukur kecerdasan buatan yang bertanggung jawab (RAI)
+- Model Flan-T5 yang dilatih dengan instruksi menunjukkan kemampuan few-shot yang kuat dan mengungguli checkpoint publik seperti T5
+
+**Hasil peningkatan jumlah tugas pelatihan dan ukuran model:** Meningkatkan ukuran model dan jumlah tugas pelatihan diharapkan terus meningkatkan kinerja, meskipun peningkatan jumlah tugas memiliki hasil yang semakin berkurang.
+
+<Screenshot src={FLAN2} alt="FLAN2" />
+Sumber Gambar: [Meningkatkan Skala Model Bahasa yang Dilatih dengan Instruksi](https://arxiv.org/abs/2210.11416)
+
+**Hasil pelatihan dengan data non-CoT dan CoT:** Pelatihan bersama pada data non-CoT dan CoT meningkatkan kinerja pada kedua jenis evaluasi, dibandingkan dengan pelatihan hanya pada salah satunya.
+
+<Screenshot src={FLAN3} alt="FLAN3" />
+Sumber Gambar: [Meningkatkan Skala Model Bahasa yang Dilatih dengan Instruksi](https://arxiv.org/abs/2210.11416)
+
+Selain itu, konsistensi diri (self-consistency) yang dikombinasikan dengan CoT mencapai hasil terbaik (State of the Art atau SoTA) pada beberapa tolok ukur. CoT + konsistensi diri juga secara signifikan meningkatkan hasil pada tolok ukur yang melibatkan masalah matematika (misalnya, MGSM, GSM8K).
+
+<Screenshot src={FLAN4} alt="FLAN4" />
+Sumber Gambar: [Meningkatkan Skala Model Bahasa yang Dilatih dengan Instruksi](https://arxiv.org/abs/2210.11416)
+
+Pelatihan CoT memungkinkan penalaran zero-shot, yang diaktifkan dengan frasa "mari kita pikirkan langkah demi langkah", pada tugas-tugas BIG-Bench. Secara umum, CoT zero-shot Flan-PaLM mengungguli CoT zero-shot PaLM tanpa pelatihan tambahan.
+
+<Screenshot src={FLAN6} alt="FLAN6" />
+Sumber Gambar: [Meningkatkan Skala Model Bahasa yang Dilatih dengan Instruksi](https://arxiv.org/abs/2210.11416)
+
+Berikut adalah beberapa contoh CoT zero-shot untuk PaLM dan Flan-PaLM dalam tugas-tugas yang belum pernah dilihat sebelumnya.
+
+<Screenshot src={FLAN5} alt="FLAN5" />
+Sumber Gambar: [Meningkatkan Skala Model Bahasa yang Dilatih dengan Instruksi](https://arxiv.org/abs/2210.11416)
+
+Berikut adalah contoh-contoh lain untuk petunjuk zero-shot. Ini menunjukkan bagaimana model PaLM kesulitan dengan pengulangan dan tidak merespons instruksi dalam pengaturan zero-shot, sementara Flan-PaLM mampu berkinerja dengan baik. Contoh-contoh few-shot dapat mengurangi kesalahan-kesalahan ini.
+
+<Screenshot src={FLAN7} alt="FLAN7" />
+Sumber Gambar: [Meningkatkan Skala Model Bahasa yang Dilatih dengan Instruksi](https://arxiv.org/abs/2210.11416)
+
+Berikut adalah beberapa contoh yang mendemonstrasikan kemampuan zero-shot lebih lanjut dari model Flan-PALM pada beberapa jenis pertanyaan terbuka yang menantang:
+
+<Screenshot src={FLAN8} alt="FLAN8" />
+Sumber Gambar: [Meningkatkan Skala Model Bahasa yang Dilatih dengan Instruksi](https://arxiv.org/abs/2210.11416)
+
+<Screenshot src={FLAN9} alt="FLAN9" />
+Sumber Gambar: [Meningkatkan Skala Model Bahasa yang Dilatih dengan Instruksi](https://arxiv.org/abs/2210.11416)
+
+<Screenshot src={FLAN10} alt="FLAN10" />
+Sumber Gambar: [Meningkatkan Skala Model Bahasa yang Dilatih dengan Instruksi](https://arxiv.org/abs/2210.11416)
+
+Anda dapat mencoba [model Flan-T5 di Hugging Face Hub](https://huggingface.co/google/flan-t5-xxl).

@@ -1,0 +1,246 @@
+
+# Memulai dengan Gemini
+
+import { Callout, FileTree } from 'nextra-theme-docs'
+import {Screenshot} from 'components/screenshot'
+import GEMINI1 from '../../../img/gemini/gemini-1.png'
+import GEMINI2 from '../../../img/gemini/gemini-architecture.png'
+import GEMINI3 from '../../../img/gemini/gemini-result.png'
+import GEMINI4 from '../../../img/gemini/gemini-2.png'
+import GEMINI5 from '../../../img/gemini/gemini-3.png'
+import GEMINI6 from '../../../img/gemini/gemini-6.png'
+import GEMINI7 from '../../../img/gemini/gemini-7.png'
+import GEMINI8 from '../../../img/gemini/gemini-8.png'
+import GEMINI9 from '../../../img/gemini/pe-guide.png'
+import GEMINI10 from '../../../img/gemini/prompt-webqa-1.png'
+import GEMINI11 from '../../../img/gemini/prompt-webqa-2.png'
+import GEMINI12 from '../../../img/gemini/gemini-few-shot.png'
+import GEMINI13 from '../../../img/gemini/gemini-few-shot-2.png'
+
+Dalam panduan ini, kami akan memberikan gambaran umum tentang model Gemini dan cara efektif untuk memberikan prompt (petunjuk) dan menggunakannya. Panduan ini juga mencakup kemampuan, tips, aplikasi, batasan, makalah, dan bahan bacaan tambahan terkait model Gemini.
+
+## Pengenalan Gemini
+
+Gemini adalah model AI terbaru dan paling canggih dari Google Deepmind. Model ini dibangun dengan kemampuan multimodal (dapat memproses berbagai jenis data seperti teks, gambar, dan suara) dari awal dan menunjukkan kemampuan penalaran lintas modal yang mengesankan untuk teks, gambar, video, audio, dan kode.
+
+Gemini tersedia dalam tiga ukuran:
+
+- **Ultra** - model paling canggih dalam seri ini dan cocok untuk tugas yang sangat kompleks
+- **Pro** - dianggap sebagai model terbaik untuk berbagai tugas
+- **Nano** - model efisien untuk tugas dan penggunaan di perangkat dengan memori terbatas; termasuk model dengan 1,8 miliar (Nano-1) dan 3,25 miliar (Nano-2) parameter yang diambil dari model Gemini besar dan dioptimalkan menjadi 4-bit.
+
+Menurut [laporan teknis](https://storage.googleapis.com/deepmind-media/gemini/gemini_1_report.pdf) yang menyertainya, Gemini memajukan state of the art (pencapaian terbaik saat ini) dalam 30 dari 32 benchmark yang mencakup tugas-tugas seperti bahasa, pengkodean, penalaran, dan penalaran multimodal.
+
+Ini adalah model pertama yang mencapai kinerja setara ahli manusia pada [MMLU](https://paperswithcode.com/dataset/mmlu) (benchmark ujian populer), dan mengklaim state of the art dalam 20 benchmark multimodal. Gemini Ultra mencapai 90,0% pada MMLU dan 62,4% pada [benchmark MMMU](https://mmmu-benchmark.github.io/) yang membutuhkan pengetahuan dan penalaran tingkat perguruan tinggi.
+
+Model Gemini dilatih untuk mendukung panjang konteks 32 ribu token dan dibangun di atas decoder Transformer dengan mekanisme perhatian yang efisien (misalnya, [perhatian multi-query](https://arxiv.org/abs/1911.02150)). Model ini mendukung input teks yang diselingi dengan input audio dan visual, serta dapat menghasilkan output teks dan gambar.
+
+<Screenshot src={GEMINI2} alt="GEMINI2" />
+
+Model-model ini dilatih pada data multimodal dan multibahasa seperti dokumen web, buku, dan data kode, termasuk data gambar, audio, dan video. Model-model tersebut dilatih secara bersama-sama di semua modalitas dan menunjukkan kemampuan penalaran lintas modal yang kuat dan bahkan kemampuan yang kuat di setiap domain.
+
+## Hasil Eksperimen Gemini
+
+Gemini Ultra mencapai akurasi tertinggi ketika dikombinasikan dengan pendekatan seperti [prompt chain-of-thought (CoT)](https://www.promptingguide.ai/techniques/cot) (rantai pemikiran) dan [self-consistency](https://www.promptingguide.ai/techniques/consistency) (konsistensi diri) yang membantu menangani ketidakpastian model.
+
+Seperti dilaporkan dalam laporan teknis, Gemini Ultra meningkatkan kinerjanya pada MMLU dari 84,0% dengan pengambilan sampel greedy menjadi 90,0% dengan pendekatan chain-of-thought yang diarahkan oleh ketidakpastian (melibatkan CoT dan voting mayoritas) dengan 32 sampel, sementara hanya sedikit meningkat menjadi 85,0% dengan penggunaan 32 sampel chain-of-thought saja. Demikian pula, CoT dan self-consistency mencapai akurasi 94,4% pada benchmark matematika tingkat sekolah dasar GSM8K. Selain itu, Gemini Ultra berhasil mengimplementasikan 74,4% dari masalah penyelesaian kode [HumanEval](https://paperswithcode.com/dataset/humaneval). Berikut adalah tabel yang merangkum hasil Gemini dan bagaimana model-model tersebut dibandingkan dengan model-model terkenal lainnya.
+
+<Screenshot src={GEMINI3} alt="GEMINI3" />
+
+Model Gemini Nano juga menunjukkan kinerja yang kuat pada faktualitas (yaitu tugas-tugas terkait pengambilan informasi), penalaran, STEM, pengkodean, tugas multimodal dan multibahasa.
+
+Selain kemampuan multibahasa standar, Gemini menunjukkan kinerja yang bagus pada benchmark matematika dan ringkasan multibahasa seperti [MGSM](https://paperswithcode.com/dataset/mgsm) dan [XLSum](https://paperswithcode.com/dataset/xl-sum).
+
+Model Gemini dilatih pada panjang urutan 32 ribu token dan ditemukan dapat mengambil nilai yang benar dengan akurasi 98% ketika diminta di seluruh panjang konteks. Ini adalah kemampuan penting untuk mendukung kasus penggunaan baru seperti pengambilan informasi dari dokumen dan pemahaman video.
+
+Model Gemini yang telah dilatih dengan instruksi secara konsisten lebih disukai oleh evaluator manusia untuk kemampuan penting seperti mengikuti instruksi, menulis kreatif, dan keamanan.
+
+## Kemampuan Penalaran Multimodal Gemini
+
+Gemini dilatih secara alami multimodal dan menunjukkan kemampuan untuk menggabungkan kemampuan lintas modalitas dengan kemampuan penalaran model bahasa. Kemampuan ini termasuk namun tidak terbatas pada ekstraksi informasi dari tabel, grafik, dan gambar. Kemampuan menarik lainnya termasuk membedakan detail yang sangat spesifik dari input, mengumpulkan konteks di seluruh ruang dan waktu, dan menggabungkan informasi dari berbagai modalitas.
+
+Gemini secara konsisten mengungguli pendekatan yang ada dalam tugas-tugas pemahaman gambar seperti pengenalan objek tingkat tinggi, transkripsi detail, pemahaman grafik, dan penalaran multimodal. Beberapa kemampuan pemahaman dan pembuatan gambar juga ditransfer ke berbagai bahasa global (misalnya, menghasilkan deskripsi gambar menggunakan bahasa seperti Hindi dan Rumania).
+
+### Ringkasan Teks
+
+Meskipun Gemini dilatih sebagai sistem multimodal, ia memiliki banyak kemampuan yang ada pada model bahasa besar modern seperti GPT-3.5, Claude, dan Llama. Berikut adalah contoh tugas ringkasan teks sederhana menggunakan Gemini Pro. Kami menggunakan [Google AI Studio](https://ai.google.dev) untuk contoh ini dengan nilai temperature 0.
+
+Prompt:
+```
+Tugas Anda adalah meringkas sebuah abstrak menjadi satu kalimat.
+
+Hindari jargon teknis dan jelaskan dengan kata-kata yang paling sederhana.
+
+Abstrak: Antibiotik adalah jenis obat yang digunakan untuk mengobati infeksi bakteri. Mereka bekerja dengan cara membunuh bakteri atau mencegah mereka berkembang biak, memungkinkan sistem kekebalan tubuh melawan infeksi. Antibiotik biasanya diminum secara oral dalam bentuk pil, kapsul, atau larutan cair, atau kadang-kadang diberikan secara intravena. Mereka tidak efektif melawan infeksi virus, dan penggunaan yang tidak tepat dapat menyebabkan resistensi antibiotik.
+```
+
+Output Gemini Pro:
+
+```
+Antibiotik adalah obat untuk membunuh atau menghentikan pertumbuhan bakteri penyebab infeksi, tetapi tidak bekerja melawan virus.
+```
+
+Berikut adalah tangkapan layar bagaimana tugas dan respons model (disorot) terlihat di dalam Google AI Studio.
+
+<Screenshot src={GEMINI8} alt="GEMINI8" />
+
+### Ekstraksi Informasi
+
+Berikut adalah contoh lain dari tugas yang menganalisis sepotong teks dan mengekstrak informasi yang diinginkan. Perlu diingat bahwa ini menggunakan prompt zero-shot (tanpa contoh) sehingga hasilnya tidak sempurna, tetapi model melakukan cukup baik.
+
+Prompt:
+```
+Tugas Anda adalah mengekstrak nama model dari abstrak makalah pembelajaran mesin. Respons Anda adalah sebuah array nama model dalam format [\"nama_model\"]. Jika Anda tidak menemukan nama model dalam abstrak atau Anda tidak yakin, kembalikan [\"NA\"]
+
+Abstrak: Model Bahasa Besar (LLM), seperti ChatGPT dan GPT-4, telah merevolusi penelitian pemrosesan bahasa alami dan menunjukkan potensi dalam Kecerdasan Buatan Umum (AGI). Namun, pelatihan dan penerapan LLM yang mahal menimbulkan tantangan bagi penelitian akademik yang transparan dan terbuka. Untuk mengatasi masalah ini, proyek ini membuka sumber Chinese LLaMA dan Alpaca…
+```
+
+Output Gemini Pro:
+
+```
+[\"LLM\", \"ChatGPT\", \"GPT-4\", \"Chinese LLaMA\", \"Alpaca\"]
+```
+
+### Menjawab Pertanyaan Visual
+
+Menjawab pertanyaan visual melibatkan mengajukan pertanyaan kepada model tentang gambar yang diberikan sebagai input. Model Gemini menunjukkan berbagai kemampuan penalaran multimodal untuk pemahaman gambar terhadap grafik, gambar alami, meme, dan banyak jenis gambar lainnya. Dalam contoh di bawah ini, kami memberikan model (Gemini Pro Vision diakses melalui Google AI Studio) instruksi teks dan gambar yang merupakan cuplikan dari panduan rekayasa prompt ini.
+
+Model menjawab "Judul situs web adalah "Prompt Engineering Guide"." yang tampaknya merupakan jawaban yang benar berdasarkan pertanyaan yang diberikan.
+
+<Screenshot src={GEMINI10} alt="GEMINI10" />
+
+Berikut adalah contoh lain dengan pertanyaan input yang berbeda. Google AI Studio memungkinkan Anda untuk menguji dengan input yang berbeda dengan mengklik opsi `{{}} Test input` di atas. Anda kemudian dapat menambahkan prompt yang Anda uji dalam tabel di bawah.
+
+<Screenshot src={GEMINI11} alt="GEMINI11" />
+
+Jangan ragu untuk bereksperimen dengan mengunggah gambar Anda sendiri dan mengajukan pertanyaan. Dilaporkan bahwa Gemini Ultra dapat melakukan jauh lebih baik pada jenis tugas ini. Ini adalah sesuatu yang akan kami eksperimen lebih lanjut ketika model tersebut tersedia.
+
+### Memverifikasi dan Mengoreksi
+
+Model Gemini menunjukkan kemampuan penalaran lintas modal yang mengesankan. Misalnya, gambar di bawah ini menunjukkan solusi untuk masalah fisika yang digambar oleh seorang guru (kiri). Gemini kemudian diminta untuk bernalar tentang pertanyaan tersebut dan menjelaskan di mana siswa salah dalam solusinya jika mereka melakukannya. Model juga diinstruksikan untuk memecahkan masalah dan menggunakan LaTeX untuk bagian matematikanya. Respons (kanan) adalah solusi yang diberikan oleh model yang menjelaskan masalah dan solusinya dengan detail.
+
+<Screenshot src={GEMINI1} alt="GEMINI1" />
+
+### Menyusun Ulang Gambar
+
+Di bawah ini adalah contoh menarik lainnya dari laporan teknis yang menunjukkan kemampuan penalaran multimodal Gemini untuk menghasilkan kode matplotlib untuk menyusun ulang subplot. Prompt multimodal ditunjukkan di kiri atas, kode yang dihasilkan di sebelah kanan, dan kode yang dirender di kiri bawah. Model memanfaatkan beberapa kemampuan untuk memecahkan tugas seperti pengenalan, pembuatan kode, penalaran abstrak tentang lokasi subplot, dan mengikuti instruksi untuk menyusun ulang subplot dalam posisi yang diinginkan.
+
+<Screenshot src={GEMINI4} alt="GEMINI4" />
+
+### Pemahaman Video
+
+Gemini Ultra mencapai hasil state-of-the-art pada berbagai tugas pemberian keterangan video few-shot (dengan sedikit contoh) dan menjawab pertanyaan video zero-shot (tanpa contoh). Contoh di bawah ini menunjukkan bahwa model diberikan video dan instruksi teks sebagai input. Ia dapat menganalisis video dan bernalar tentang situasi untuk memberikan jawaban yang tepat atau dalam hal ini rekomendasi tentang bagaimana orang tersebut dapat meningkatkan tekniknya.
+
+<Screenshot src={GEMINI5} alt="GEMINI5" />
+
+### Pemahaman Gambar
+
+Gemini Ultra juga dapat menerima prompt few-shot dan menghasilkan gambar. Misalnya, seperti yang ditunjukkan dalam contoh di bawah ini, ia dapat diberikan prompt dengan satu contoh gambar dan teks yang saling terkait di mana pengguna memberikan informasi tentang dua warna dan saran gambar. Model kemudian mengambil instruksi terakhir dalam prompt dan merespons dengan warna yang dilihatnya bersama dengan beberapa ide.
+
+<Screenshot src={GEMINI6} alt="GEMINI6" />
+
+### Kombinasi Modalitas
+
+Model Gemini juga menunjukkan kemampuan untuk memproses urutan audio dan gambar secara alami. Dari contoh, Anda dapat melihat bahwa model dapat diberikan prompt dengan urutan audio dan gambar. Model kemudian dapat mengirimkan respons teks yang mempertimbangkan konteks dari setiap interaksi.
+
+<Screenshot src={GEMINI7} alt="GEMINI7" />
+
+### Agen Pengkodean Generalis Gemini
+
+Gemini juga digunakan untuk membangun agen generalis yang disebut [AlphaCode 2](https://storage.googleapis.com/deepmind-media/AlphaCode2/AlphaCode2_Tech_Report.pdf) yang menggabungkan kemampuan penalarannya dengan pencarian dan penggunaan alat untuk memecahkan masalah pemrograman kompetitif. AlphaCode 2 berada dalam 15% teratas peserta di platform pemrograman kompetitif Codeforces.
+
+## Prompt Few-Shot dengan Gemini
+
+Prompt few-shot adalah pendekatan pemberian prompt yang berguna untuk menunjukkan kepada model jenis output yang Anda inginkan. Ini berguna untuk berbagai skenario seperti ketika Anda menginginkan output dalam format tertentu (misalnya, objek JSON) atau gaya tertentu. Google AI Studio juga memungkinkan ini dalam antarmukanya. Berikut adalah contoh cara menggunakan prompt few-shot dengan model Gemini.
+
+Kami tertarik untuk membangun pengklasifikasi emosi sederhana menggunakan Gemini. Langkah pertama adalah membuat "Prompt Terstruktur" dengan mengklik "Create new" atau "+". Prompt few-shot akan menggabungkan instruksi Anda (menjelaskan tugas) dan contoh yang telah Anda berikan. Gambar di bawah ini menunjukkan instruksi (atas) dan contoh yang kami berikan kepada model. Anda dapat mengatur teks INPUT dan OUTPUT untuk memiliki indikator yang lebih deskriptif. Contoh di bawah ini menggunakan "Teks:" sebagai input dan "Emosi:" sebagai indikator input dan output, masing-masing.
+
+<Screenshot src={GEMINI12} alt="GEMINI12" />
+
+Seluruh prompt gabungan adalah sebagai berikut:
+
+```
+Tugas Anda adalah mengklasifikasikan sepotong teks, yang dibatasi oleh tanda kutip tiga, ke dalam label emosi berikut: ["marah", "takut", "gembira", "cinta", "sedih", "terkejut"]. Keluarkan label sebagai string huruf kecil.
+Teks: Saya merasa sangat marah hari ini
+Emosi: marah
+Teks: Merasa senang dengan kabar baik hari ini.
+Emosi: gembira
+Teks: Saya sebenarnya merasa baik hari ini.
+Emosi:
+```
+
+Anda kemudian dapat menguji prompt dengan menambahkan input ke bagian "Test your prompt". Kami menggunakan contoh "Saya sebenarnya merasa baik hari ini." sebagai input dan model dengan benar mengeluarkan label "gembira" setelah mengklik "Run". Lihat contoh dalam gambar di bawah ini:
+
+<Screenshot src={GEMINI13} alt="GEMINI13" />
+
+## Penggunaan Pustaka
+
+Berikut adalah contoh sederhana yang menunjukkan cara memberikan prompt kepada model Gemini Pro menggunakan API Gemini. Anda perlu menginstal pustaka `google-generativeai` dan mendapatkan Kunci API dari Google AI Studio. Contoh di bawah ini adalah kode untuk menjalankan tugas ekstraksi informasi yang sama yang digunakan dalam bagian di atas.
+
+```python
+"""
+Di baris perintah, hanya perlu dijalankan sekali untuk menginstal paket melalui pip:
+
+$ pip install google-generativeai
+"""
+
+import google.generativeai as genai
+
+genai.configure(api_key="KUNCI_API_ANDA")
+
+# Siapkan model
+generation_config = {
+  "temperature": 0,
+  "top_p": 1,
+  "top_k": 1,
+  "max_output_tokens": 2048,
+}
+
+safety_settings = [
+  {
+    "category": "HARM_CATEGORY_HARASSMENT",
+    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+  },
+  {
+    "category": "HARM_CATEGORY_HATE_SPEECH",
+    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+  },
+  {
+    "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+  },
+  {
+    "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+  }
+]
+
+model = genai.GenerativeModel(model_name="gemini-pro",
+                              generation_config=generation_config,
+                              safety_settings=safety_settings)
+
+prompt_parts = [
+  "Tugas Anda adalah mengekstrak nama model dari abstrak makalah pembelajaran mesin. Respons Anda adalah sebuah array nama model dalam format [\\\"nama_model\\\"]. Jika Anda tidak menemukan nama model dalam abstrak atau Anda tidak yakin, kembalikan [\\\"NA\\\"]\n\nAbstrak: Model Bahasa Besar (LLM), seperti ChatGPT dan GPT-4, telah merevolusi penelitian pemrosesan bahasa alami dan menunjukkan potensi dalam Kecerdasan Buatan Umum (AGI). Namun, pelatihan dan penerapan LLM yang mahal menimbulkan tantangan bagi penelitian akademik yang transparan dan terbuka. Untuk mengatasi masalah ini, proyek ini membuka sumber Chinese LLaMA dan Alpaca…",
+]
+
+response = model.generate_content(prompt_parts)
+print(response.text)
+```
+
+Outputnya sama seperti sebelumnya:
+```
+[\"LLM\", \"ChatGPT\", \"GPT-4\", \"Chinese LLaMA\", \"Alpaca\"]
+```
+
+## Referensi
+
+- [Memperkenalkan Gemini: model AI terbesar dan paling canggih kami](https://blog.google/technology/ai/google-gemini-ai/#sundar-note)
+- [Bagaimana Cara Membuatnya: Berinteraksi dengan Gemini melalui prompt multimodal](https://developers.googleblog.com/2023/12/how-its-made-gemini-multimodal-prompting.html)
+- [Selamat datang di era Gemini](https://deepmind.google/technologies/gemini/#introduction)
+- [Strategi desain prompt](https://ai.google.dev/docs/prompt_best_practices)
+- [Gemini: Keluarga Model Multimodal yang Sangat Mampu - Laporan Teknis](https://storage.googleapis.com/deepmind-media/gemini/gemini_1_report.pdf)
+- [Decoding Transformer Cepat: Satu Write-Head Sudah Cukup](https://arxiv.org/abs/1911.02150)
+- [Panduan cepat Google AI Studio](https://ai.google.dev/tutorials/ai-studio_quickstart)
+- [Prompt Multimodal](https://ai.google.dev/docs/multimodal_concepts)
+- [Gemini vs GPT-4V: Perbandingan Awal dan Kombinasi Model Vision-Language Melalui Kasus Kualitatif](https://arxiv.org/abs/2312.15011v1)
+- [Penantang GPT-4V? Eksplorasi Awal Gemini dalam Keahlian Visual](https://arxiv.org/abs/2312.12436v2)

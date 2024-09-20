@@ -67,8 +67,7 @@ const config: DocsThemeConfig = {
   //   text: 'SWR 2.0 is out! Read more →'
   // },
   darkMode: true,
-  docsRepositoryBase:
-    'https://github.com/shuding/nextra/blob/core/examples/swr-site',
+  docsRepositoryBase: 'https://github.com/shuding/nextra/blob/core/examples/swr-site',
   editLink: {
     text: function useText() {
       const { locale } = useRouter()
@@ -160,9 +159,8 @@ const config: DocsThemeConfig = {
         <SWRLogo className="h-3" />
         <span
           className="hidden select-none font-extrabold ltr:ml-2 rtl:mr-2 md:inline"
-          title={`SWR: ${TITLE[locale!] || ''}`} // eslint-disable-line @typescript-eslint/no-unnecessary-type-assertion
         >
-          SWR
+          Belajar Prompt
         </span>
       </>
     )
@@ -192,10 +190,6 @@ const config: DocsThemeConfig = {
   },
   toc: {
     backToTop: true,
-    extraContent: (
-      // eslint-disable-next-line @next/next/no-img-element -- ignore since url is external and dynamic
-      <img alt="placeholder cat" src="https://placekitten.com/g/300/200" />
-    ),
     float: true,
     headingComponent: function Heading({ id, children }) {
       return (
@@ -207,9 +201,8 @@ const config: DocsThemeConfig = {
     }
   },
   useNextSeoProps() {
-    const { locale } = useRouter()
     return {
-      titleTemplate: `%s | SWR (${locale})`
+      titleTemplate: `%s | Belajar Prompt`
     }
   }
 }

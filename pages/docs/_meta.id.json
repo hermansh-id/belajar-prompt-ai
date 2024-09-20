@@ -1,0 +1,27 @@
+{
+    "introduction": "Pengenalan",
+    "techniques": "Teknik",
+    "guides": "Panduan",
+    "applications": "Aplikasi",
+    "prompts": "Pusat Prompt",
+    "models": "Model",
+    "risks": "Risiko & Penyalahgunaan",
+    "research": "Temuan Penelitian LLM",
+    "papers": "Makalah",
+    "tools": "Alat",
+    "notebooks": "Buku Catatan",
+    "datasets": "Kumpulan Data",
+    "readings": "Bacaan Tambahan",
+    "course": {
+        "title": "🎓 Kursus Rekayasa Prompt",
+        "type": "page"
+    },
+    "services": {
+        "title": "Layanan",
+        "type": "page"
+    },
+    "about": {
+        "title": "Tentang",
+        "type": "page"
+    }
+}

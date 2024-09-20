@@ -1,0 +1,47 @@
+
+# Pohon Pemikiran (Tree of Thoughts - ToT)
+
+import { Callout, FileTree } from 'nextra-theme-docs'
+import {Screenshot} from 'components/screenshot'
+import TOT from '../../../img/TOT.png'
+import TOT2 from '../../../img/TOT2.png'
+import TOT3 from '../../../img/TOT3.png'
+
+Untuk tugas-tugas kompleks yang memerlukan eksplorasi atau perencanaan ke depan, teknik prompting (pemberian petunjuk) sederhana atau tradisional seringkali tidak memadai. [Yao et al. (2023)](https://arxiv.org/abs/2305.10601) dan [Long (2023)](https://arxiv.org/abs/2305.08291) baru-baru ini mengusulkan metode Pohon Pemikiran (Tree of Thoughts - ToT), sebuah kerangka kerja yang memperluas konsep prompting berantai (chain-of-thought prompting) dan mendorong eksplorasi pemikiran sebagai langkah-langkah menengah dalam pemecahan masalah umum menggunakan model bahasa.
+
+Bayangkan ToT seperti sebuah pohon dengan banyak cabang, di mana setiap cabang mewakili alur pemikiran yang berbeda. Metode ini memungkinkan model bahasa untuk mengevaluasi sendiri kemajuan yang dibuat dalam memecahkan masalah melalui proses penalaran yang terencana. Kemampuan model bahasa untuk menghasilkan dan mengevaluasi pemikiran kemudian digabungkan dengan algoritma pencarian (misalnya, pencarian melebar/breadth-first search dan pencarian mendalam/depth-first search) untuk memungkinkan eksplorasi pemikiran yang sistematis dengan perencanaan ke depan dan kemampuan untuk kembali ke langkah sebelumnya jika diperlukan.
+
+Kerangka kerja ToT diilustrasikan di bawah ini:
+
+<Screenshot src={TOT} alt="TOT" />
+Sumber Gambar: [Yao et al. (2023)](https://arxiv.org/abs/2305.10601)
+
+Ketika menggunakan ToT, berbagai tugas memerlukan penentuan jumlah kandidat dan jumlah pemikiran/langkah. Misalnya, seperti yang ditunjukkan dalam penelitian, permainan Game of 24 digunakan sebagai tugas penalaran matematika yang memerlukan pemecahan pemikiran menjadi 3 langkah, masing-masing melibatkan persamaan perantara. Pada setiap langkah, 5 kandidat terbaik dipertahankan.
+
+Untuk melakukan pencarian melebar (BFS) dalam ToT untuk tugas Game of 24, model bahasa diminta untuk mengevaluasi setiap kandidat pemikiran sebagai "pasti/mungkin/tidak mungkin" dalam mencapai angka 24. Seperti yang dinyatakan oleh para peneliti, "tujuannya adalah untuk mempromosikan solusi parsial yang benar yang dapat diverifikasi dalam beberapa percobaan ke depan, mengeliminasi solusi parsial yang tidak mungkin berdasarkan akal sehat 'terlalu besar/kecil', dan mempertahankan sisanya sebagai 'mungkin'". Nilai-nilai diambil sampel 3 kali untuk setiap pemikiran. Prosesnya diilustrasikan di bawah ini:
+
+<Screenshot src={TOT2} alt="TOT2" />
+Sumber Gambar: [Yao et al. (2023)](https://arxiv.org/abs/2305.10601)
+
+Dari hasil yang dilaporkan dalam gambar di bawah ini, ToT secara substansial mengungguli metode prompting lainnya:
+
+<Screenshot src={TOT3} alt="TOT3" />
+Sumber Gambar: [Yao et al. (2023)](https://arxiv.org/abs/2305.10601)
+
+Kode tersedia [di sini](https://github.com/princeton-nlp/tree-of-thought-llm) dan [di sini](https://github.com/jieyilong/tree-of-thought-puzzle-solver)
+
+Secara umum, ide utama dari [Yao et al. (2023)](https://arxiv.org/abs/2305.10601) dan [Long (2023)](https://arxiv.org/abs/2305.08291) serupa. Keduanya meningkatkan kemampuan model bahasa besar (LLM) untuk pemecahan masalah kompleks melalui pencarian pohon via percakapan multi-putaran. Salah satu perbedaan utama adalah bahwa [Yao et al. (2023)](https://arxiv.org/abs/2305.10601) memanfaatkan pencarian DFS/BFS/beam, sementara strategi pencarian pohon (misalnya kapan harus kembali ke langkah sebelumnya dan berapa banyak level yang harus dikembalikan) yang diusulkan dalam [Long (2023)](https://arxiv.org/abs/2305.08291) dikendalikan oleh "Pengontrol ToT" yang dilatih melalui pembelajaran penguatan (reinforcement learning).
+
+[Hulbert (2023)](https://github.com/dave1010/tree-of-thought-prompting) telah mengusulkan Prompting Pohon Pemikiran (Tree-of-Thought Prompting), yang menerapkan konsep utama dari kerangka kerja ToT sebagai teknik prompting sederhana, membuat LLM mengevaluasi pemikiran perantara dalam satu prompt. Contoh prompt ToT adalah:
+
+```
+Bayangkan tiga ahli berbeda menjawab pertanyaan ini.
+Semua ahli akan menuliskan 1 langkah pemikiran mereka,
+kemudian membagikannya dengan kelompok.
+Kemudian semua ahli akan melanjutkan ke langkah berikutnya, dst.
+Jika ada ahli yang menyadari mereka salah pada titik mana pun, mereka keluar.
+Pertanyaannya adalah...
+```
+
+[Sun (2023)](https://github.com/holarissun/PanelGPT) melakukan benchmark terhadap Prompting Pohon Pemikiran dengan eksperimen skala besar, dan memperkenalkan PanelGPT --- sebuah ide prompting dengan diskusi Panel di antara LLM.
+

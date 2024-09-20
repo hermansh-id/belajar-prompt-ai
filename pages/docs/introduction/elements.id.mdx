@@ -1,0 +1,35 @@
+
+# Elemen-elemen Prompt
+
+import {Bleed} from 'nextra-theme-docs'
+
+Ketika kita mempelajari lebih banyak contoh dan aplikasi dalam rekayasa prompt (prompt engineering), kita akan menyadari bahwa ada beberapa elemen yang membentuk sebuah prompt.
+
+Sebuah prompt biasanya terdiri dari elemen-elemen berikut:
+
+- **Instruksi** - tugas atau perintah spesifik yang ingin Anda minta model untuk lakukan
+- **Konteks** - informasi tambahan atau latar belakang yang dapat membantu model memberikan respons yang lebih baik
+- **Data Masukan** - pertanyaan atau informasi yang ingin kita dapatkan jawabannya
+- **Indikator Keluaran** - jenis atau format jawaban yang diinginkan
+
+<iframe width="100%"
+  height="415px"
+  src="https://www.youtube.com/embed/kgBZhJnh-vk?si=-a-KvhmXFJMtAuCB" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+  />
+
+Untuk lebih memahami elemen-elemen prompt, mari kita lihat contoh sederhana prompt yang bertujuan untuk melakukan tugas klasifikasi teks:
+
+*Prompt*
+```
+Klasifikasikan teks berikut ke dalam kategori netral, negatif, atau positif
+
+Teks: Menurut saya makanannya biasa saja.
+
+Sentimen:
+```
+
+Dalam contoh prompt di atas, instruksinya adalah tugas klasifikasi: "Klasifikasikan teks berikut ke dalam kategori netral, negatif, atau positif". Data masukannya adalah kalimat "Menurut saya makanannya biasa saja." Dan indikator keluarannya adalah "Sentimen:". Perhatikan bahwa contoh sederhana ini tidak menggunakan konteks, tetapi konteks juga bisa ditambahkan sebagai bagian dari prompt. Misalnya, konteks untuk prompt klasifikasi teks ini bisa berupa contoh-contoh tambahan yang diberikan dalam prompt untuk membantu model lebih memahami tugas dan mengarahkan jenis keluaran yang Anda harapkan.
+
+Perlu diingat bahwa Anda tidak selalu memerlukan keempat elemen tersebut dalam sebuah prompt, dan formatnya tergantung pada tugas yang ingin dilakukan. Kita akan membahas contoh-contoh yang lebih konkret dalam panduan-panduan selanjutnya.
+
